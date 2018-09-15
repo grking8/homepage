@@ -12,7 +12,7 @@ jobs:
           environment:
             JEKYLL_ENV: production
       - persist_to_workspace:
-          root: /srv/jekyll
+          root: .
           paths:
             - _site
 
