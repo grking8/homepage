@@ -1,8 +1,7 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 set -xe
 
 . deploy.cfg
 mkdir -p $STATIC_DIR
-mkdir -p .bundle/config
 jekyll build
