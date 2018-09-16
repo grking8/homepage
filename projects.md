@@ -5,20 +5,24 @@ permalink: /projects/
 order: 3
 ---
 
-- # homepage / blog
+- # static website template
+
+    **Infrastructure as code for continuous deployment of static websites**
+
+    _CircleCI, Docker, GCP Container Registry, GCP Compute Engine, Let's Encrypt_
+
+    [source, ](https://github.com/family-guy/test-website) 
+    [wiki](https://github.com/family-guy/test-website/wiki)
+
+- # homepage
     
-    **Jekyll theme minima**
+    **Personal homepage and blog using above template**
     
-    - master
-    
-        _CircleCI, Kubernetes, Google Cloud Platform (Container Registry, Kubernetes Engine), Let's Encrypt_
-    
-    - gce
-    
-        _Docker Hub, Google Cloud Platform (Compute Engine), Let's Encrypt_
-    
-    [source, ](https://github.com/family-guy/minima) 
-    [wiki](https://family-guy.github.io/blog/)
+    _Jekyll, CircleCI, Docker, GCP Container Registry, GCP Compute Engine, Let's Encrypt_
+
+    [source, ](https://github.com/family-guy/homepage) 
+    [wiki, ](https://github.com/family-guy/homepage/wiki)
+    [demo](https://guyrking.com)
 
 - # aiostorage
 

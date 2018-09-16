@@ -39,7 +39,7 @@ Uses template repository [test-website.](https://github.com/family-guy/test-webs
 
 [Wiki](https://github.com/family-guy/homepage/wiki)
 
-# Contributing guidelines
+# Contributing Guidelines
 
 This repository is more for personal use, but any comments / pull requests welcome.
 
