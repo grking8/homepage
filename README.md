@@ -28,12 +28,11 @@ Uses template repository [test-website.](https://github.com/family-guy/test-webs
 
 # Documentation
 
-- [Wiki](https://github.com/family-guy/homepage/wiki)
+[Wiki](https://github.com/family-guy/homepage/wiki)
 
 # Contributing guidelines
 
-This repository is more for personal use, but any comments / pull requests 
-are welcome.
+This repository is more for personal use, but any comments / pull requests welcome.
 
 # License
 
