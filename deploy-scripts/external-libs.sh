@@ -1,4 +1,9 @@
 #!/usr/bin/env sh
+#
+# Download external repositories
+#
+# $1 - running on Alpine Linux
+#
 
 set -e
 
