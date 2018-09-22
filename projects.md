@@ -16,7 +16,7 @@ order: 3
 
 - # homepage
     
-    **Personal homepage and blog using above template**
+    **Personal homepage and blog using static website template**
     
     _Jekyll, CircleCI, Docker, GCP Container Registry, GCP Compute Engine, Let's Encrypt_
 
