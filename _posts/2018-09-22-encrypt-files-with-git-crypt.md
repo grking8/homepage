@@ -141,10 +141,11 @@ To be added, a collaborator should
 ```
 pub 2048R/<public-key-id> 2018-08-30
 ```
-- Export public key to a file `gpg --output <public-key-filename>.gpg --armor export <public-key-id>`
+- Export public key to a file `gpg --output <public-key-filename>.gpg --armor --export <public-key-id>`
 - Send file to `<crypt-admin>`
 - Get `<crypt-admin>` to 
     - Add the collaborator's public key to their key ring `gpg --import /path/to/<public-key-filename>.gpg`
+    - `gpg --list-keys`
     - Make the key trustworthy `gpg --edit-key <public-key-id>`
     - At the `gpg>` prompt
         - Enter `sign`
@@ -153,5 +154,5 @@ pub 2048R/<public-key-id> 2018-08-30
     - Add the key to the crypt `git-crypt add-gpg-user <public-key-id>`
     - Push auto-generated commit up to Git host
 - Pull down `<my-repo>` from Git host
-- `git crypt unlock`
+- `git-crypt unlock`
 - Verify the files are decrypted
