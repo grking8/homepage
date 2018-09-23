@@ -46,7 +46,6 @@ encrypted
 
 ```
 <files-to-encrypt> filter=git-crypt diff=git-crypt
-*.key filter=git-crypt diff=git-crypt
 ```
 
 where `<files-to-encrypt>` follows the same syntax as files specified in 
@@ -89,6 +88,9 @@ private GPG key.
 - Enter `<name>`, `<key-description>`, `<email>` 
 where `<name>`, `<email>` are known to Git - GPG automatically creates
 your `<USER-ID>` from these values
+- On macOS, `<key-expiration>` is set to a default and the user is not 
+prompted to enter a value. Also, there is no `<key-description>`, but you
+can include it in `<name>`
 - Enter a passphrase
 - On Linux, you might be asked to generate random bytes
     - Open another shell `find / | xargs file`
@@ -100,7 +102,7 @@ your `<USER-ID>` from these values
 - Verify creation of auto-generated commit `Add 1 git-crypt collaborator`
 with `git log`
 - Push auto-generated commit up to Git host
-- `rm rf /path/to/<my-repo>`
+- `rm -rf /path/to/<my-repo>`
 - `git clone <my-repo>`
 - Verify files are encrypted
 - `git-crypt unlock`
