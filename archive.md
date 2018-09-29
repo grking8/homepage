@@ -12,7 +12,7 @@ years:
 ---
 
 {% for year in page.years %}
-# {{ year }}
+## {{ year }}
   {% include archive.html year=year posts=site.posts %}
 {% endfor %}
 

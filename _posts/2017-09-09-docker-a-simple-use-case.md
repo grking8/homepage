@@ -17,11 +17,11 @@ Enter [Docker](https://www.docker.com/) to the rescue. Your whole app and everyt
 
 In this post, we are going to setup the simplest possible web application on a new server using Docker. All the app does is serve up a single static HTML file, i.e. the app consists of just a homepage.
 
-**Step 1**
+## Step 1
 
 Login to your new server. As the server is new, there is no web server software (Apache, Nginx, etc.) installed thus navigating to `http://myipaddress` returns an `unable to connect error` in the browser (even after opening up port 80).
 
-**Step 2**
+## Step 2
 
 Install Docker. The exact command(s) will depend on your server's OS, but on Amazon Linux AMI
 
@@ -31,7 +31,7 @@ sudo yum install -y docker
 
 suffices.
 
-**Step 3**
+## Step 3
 
 Start the Docker service
 
@@ -39,7 +39,7 @@ Start the Docker service
 sudo service docker start
 {% endhighlight %}
 
-**Step 4**
+## Step 4
 
 We are going to use Apache to serve up our homepage. Usually, we look for `/var/www/html` and place our HTML files there. However, as Apache isn't installed, `/var/www` does not exist.
 
@@ -93,7 +93,7 @@ home
 </table>
 {% endhighlight %}
 
-**Step 5**
+## Step 5
 
 At this point, it is worth saying a couple of things about Docker *images* and *containers*. 
 
@@ -188,7 +188,7 @@ httpd                2.4                 b669148bb5a5        32 hours ago       
 
 which shows Docker incrementally builds images following the Dockerfile line-by-line.
 
-**Step 6**
+## Step 6
 
 Now that we have an image, containers can be created from it. This is done via the Docker command `run`
 
@@ -234,39 +234,3 @@ Finally, as mentioned above, the container runs as a process on your server. To 
 {% highlight bash %}
 sudo docker container stop pokemon
 {% endhighlight %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

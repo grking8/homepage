@@ -9,7 +9,7 @@ comments: true
 {% include post-image.html name="jekyll.png" width="75" height="75" 
 alt="Jekyll logo" %}
 
-# What's Jekyll?
+## What's Jekyll?
 
 [Jekyll](https://jekyllrb.com/) is a static site generator, typically used
 for personal websites and blogs.
@@ -41,7 +41,7 @@ You have to deploy your site to a (production) server.
 There are different ways to do this. We will discuss some of them in the
 remainder of this post.
 
-# Old school 
+## Old school 
 
 You FTP the contents of `_site` into the document root of your server, e.g. 
 `/usr/share/nginx/html` for [Nginx](https://www.nginx.com/) or `/var/www/html` 
@@ -68,7 +68,7 @@ And it is difficult to:
 This list is far from exhaustive. Further, such problems will typically get worse 
 developing more complex applications.
 
-# Containerisation
+## Containerisation
 
 **Containerisation** allows you to isolate all the software and associated configuration
 required to run your application from the hardware hosting it and any other software
@@ -99,7 +99,7 @@ which is turned into a Docker image via `docker build`.
 The image can then be run on the host via `docker run`, exposing our Jekyll site to the
 internet.
 
-# Continuous Integration
+## Continuous Integration
 
 Suppose you have several developers working on the same project which has a main
 branch (typically called `master` or `develop`). 
@@ -201,7 +201,7 @@ a build in CircleCI.
 In CircleCI, you should be able to see this build and its progress as it executes the 
 instructions in `config.yml`.
 
-# Continuous Deployment
+## Continuous Deployment
 
 We saw above how CircleCI runs automated checks to ensure software quality each
 time changes are pushed up to a repository. This was part of **continuous integration**.

@@ -11,7 +11,7 @@ Suppose you have an Ubuntu instance (Google Compute Engine, Amazon EC2, etc.) ru
 
 There are numerous posts online on how to do this, usually using Nginx as a [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy) and [Docker Compose.](https://docs.docker.com/compose/overview/) This is a powerful and general solution, but if you want a stopgap, read on.
 
-### Step 1
+## Step 1
 
 As Nginx is currently running inside a Docker container, it probably isn't installed yet on the host instance itself
 
@@ -20,13 +20,13 @@ sudo apt-get update
 sudo apt-get install nginx
 ```
 
-### Step 2
+## Step 2
 
 [Let's Encrypt](https://letsencrypt.org/) is a free SSL/TLS certificate provider accepted by modern browsers for HTTPS communication. Certficates expire after three months and are renewable.
 
 Installation and configuration is easiest via [certbot](https://certbot.eff.org/#ubuntuxenial-nginx) (follow the instructions under **Install**).
 
-### Step 3
+## Step 3
 
 ```
 sudo certbot --nginx -d <mydomain>
@@ -52,7 +52,7 @@ After checking,
 sudo systemctl stop nginx
 ```
 
-### Step 4
+## Step 4
 
 Assuming your app's `Dockerfile` contains a line similar to `COPY ./path/to/my/html /usr/share/nginx/html`, in `/etc/nginx/sites-enabled/default` on the host instance, replace
 
@@ -72,7 +72,7 @@ and set the server name
 server_name <mydomain>;
 ```
 
-### Step 5
+## Step 5
 
 Add the below lines to the app's `Dockerfile`
 
@@ -83,7 +83,7 @@ RUN addgroup -g 1000 -S www-data \
 
 and rebuild the Docker image.
 
-### Step 6
+## Step 6
 
 Run the new Docker image, with some extra options:
 
@@ -108,6 +108,6 @@ to ensure the container has the same Nginx configurations as the host instance.
 
 The last option is why in Step 5 the [`www-data` user needs creating.](http://blog.tobiasforkel.de/en/2016/09/10/nginx-docker-container-and-getpwnamwww-data-problem/)
 
-### Step 7
+## Step 7
 
 Navigate in the browser to \<mydomain\> (you should see your app running over HTTPS).

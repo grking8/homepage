@@ -24,7 +24,7 @@ Docker images).
 The second job will handle the actual deployment to a production server. This will be
 done using **Kubernetes.**
 
-# Preliminary steps
+## Preliminary steps
 
 1. Create a Gmail account    
 
@@ -54,7 +54,7 @@ then **_Add Variable_** with name: `GCLOUD_SERVICE_KEY`, value: the encoded cont
   - `GCLOUD_K8_CLUSTER: <my-cluster>`
   - `DOCKER_CONTAINER_REGISTRY: <my-registry>`
 
-# Optional (recommended) steps
+## Optional (recommended) steps
 
 To interact with the Kubernetes API on your local computer:
 
@@ -67,7 +67,7 @@ try `gcloud components install kubectl`, following any prompts
 
    `gcloud container clusters get-credentials <my-cluster>`
 
-# Add job - containerisation
+## Add job - containerisation
 
 Firstly, we have to modify our original `build` job so that the contents of `_site` are
 persisted and can be used by the next job.
@@ -145,7 +145,7 @@ gcloud auth configure-docker
 
 As we want to expose our Jekyll site to the internet, we add `EXPOSE 80` to our `Dockerfile`.
 
-# Add job - Kubernetes deployment
+## Add job - Kubernetes deployment
 
 Deployment is done via `kubectl` which is part of the Google Cloud SDK.
 

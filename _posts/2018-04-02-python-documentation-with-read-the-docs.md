@@ -11,7 +11,7 @@ the Docs logo" %}
 This post is aimed at those developing Python packages who would like to use
  [Read the Docs](https://readthedocs.org/) for their documentation.
  
-### Getting it to run locally
+## Getting it to run locally
  
 - Pull down the latest code and create a new branch
 - Add some docstrings to your code 
@@ -45,7 +45,7 @@ feature where it ignores any docstrings in a class's private methods, i.e.
 those with a name beginning with an underscore)
 - Update docstrings as required and rebuild HTML, `make html`
 
-### Getting your docs online
+## Getting your docs online
 
 Here, we assume your package's source code is on Github.
 
@@ -67,7 +67,7 @@ branch into master; this should kick off a build in RTD
 - Check the status of the build under ***project-name->builds***
 - Check the RTD URL
 
-### Troubleshooting
+## Troubleshooting
 
 Even if a build succeeds, in RTD you may not see your docstrings
  / have 404s. 
