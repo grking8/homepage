@@ -5,7 +5,7 @@ permalink: /projects/
 order: 3
 ---
 
-- # static website template
+- ## static website template
 
     **Infrastructure as code for continuous deployment of static websites**
 
@@ -14,7 +14,7 @@ order: 3
     [source, ](https://github.com/family-guy/test-website) 
     [wiki](https://github.com/family-guy/test-website/wiki)
 
-- # homepage
+- ## homepage
     
     **Personal homepage and blog using static website template**
     
@@ -24,7 +24,7 @@ order: 3
     [wiki, ](https://github.com/family-guy/homepage/wiki)
     [demo](https://guyrking.com)
 
-- # aiostorage
+- ## aiostorage
 
     **Asynchronous library for cloud object storage**
     
@@ -34,6 +34,6 @@ order: 3
     [docs, ](http://aiostorage.readthedocs.io/)
     [wiki](https://family-guy.github.io/aiostorage-wiki/)
 
-- # open source contributions
+- ## open source contributions
     
     - [pytube](https://github.com/nficano/pytube)

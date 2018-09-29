@@ -20,7 +20,7 @@ In any case, encrypting files in a Git repository can be done via a tool called
 In this post, we will see how to use git-crypt on macOS / Linux to encrypt
 files in a Git hosted repository.
 
-# Prerequisites
+## Prerequisites
 
 - Install Homebrew (macOS only)
 - Install GPG (on Linux, this is probably already installed; on macOS, 
@@ -37,7 +37,7 @@ files in a Git hosted repository.
 - A Git repository `<my-repo>` to which you would like to add **new files** to be
 encrypted
 
-# Encrypt files
+## Encrypt files
 
 - `cd /path/to/<my-repo>`
 - `git-crypt init`
@@ -53,7 +53,7 @@ where `<files-to-encrypt>` follows the same syntax as files specified in
 - Add files specified in `.gitattributes` to `<my-repo>` and push up to Git host
 - Verify in Git host files are encrypted
 
-# Attention!
+## Attention!
 
 The local files are still decrypted. But, there is currently no key to unlock the 
 crypt.
@@ -76,7 +76,7 @@ authorised users can clone the repository and also decrypt files.
 The steps for `<crypt-admin>` to create the first key and unlock the 
 crypt are below.
 
-# Create a GPG user
+## Create a GPG user
 
 `<crypt-admin>` has to create a _GPG user_ for themselves.
 
@@ -96,7 +96,7 @@ can include it in `<name>`
     - Open another shell `find / | xargs file`
 - Check keys and user have been created `gpg --list-keys`
 
-# Unlock the crypt
+## Unlock the crypt
 
 - Add `<crypt-admin>`'s GPG user to the crypt `git-crypt add-gpg-user "<USER-ID>"`
 - Verify creation of auto-generated commit `Add 1 git-crypt collaborator`
@@ -109,7 +109,7 @@ with `git log`
 - Enter passphrase
 - Verify files are decrypted
 
-# Adding collaborators
+## Adding collaborators
 
 `<crypt-admin>` can now unlock the crypt and decrypt files at will!
 
