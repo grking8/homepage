@@ -9,7 +9,7 @@ order: 4
 <p>&#9658; Expand / collapse</p>
 <br>
 
-# Summary
+## Summary
 
 *2017 --*
 <details> 
@@ -99,4 +99,4 @@ order: 4
 <br>
 <br>
 <br>
-# [Full CV]({{ site.url }}/full-cv.pdf)
+## [Full CV]({{ site.url }}/full-cv.pdf)
