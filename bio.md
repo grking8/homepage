@@ -50,7 +50,7 @@ There was also a need for it at work. I had my first major collaboration
 (a front-end developer) and together we produced an MVP for a web
 dashboard.
 
-I then left this job to work on a new project with two others.
+I left this job to work on a new project with two others.
 We wanted to start a quant hedge fund, so it was a case of
 bye-bye PHP, hello Python.
 
