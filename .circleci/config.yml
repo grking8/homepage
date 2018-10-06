@@ -26,7 +26,7 @@ jobs:
               - "$EXTERNAL_GITHOST_SSH_FINGERPRINT"
       - run:
           name: Download external libraries
-          command: deploy-scripts/external-libs.sh true
+          command: deploy-scripts/external-repos.sh true
       - run:
           name: Create SSL files and configure web server
           command: deploy-scripts/configure-webserver.sh
@@ -48,7 +48,7 @@ jobs:
           at: .
       - run:
           name: Download external libraries
-          command: deploy-scripts/external-libs.sh false
+          command: deploy-scripts/external-repos.sh false
       - run:
           name: Build Docker image and push to container registry
           command: deploy-scripts/containerise.sh
@@ -63,7 +63,7 @@ jobs:
               - "$EXTERNAL_GITHOST_SSH_FINGERPRINT"
       - run:
           name: Download external libraries
-          command: deploy-scripts/external-libs.sh false
+          command: deploy-scripts/external-repos.sh false
       - run:
           name: Create or update GCP instance
           command: deploy-scripts/create-update-instance.sh
