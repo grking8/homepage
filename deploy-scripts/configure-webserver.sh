@@ -3,7 +3,7 @@
 set -xe
 
 . deploy.cfg
-cd ../$DEPLOY_SCRIPTS_LIB_REPO/ssl
+cd ../${DEPLOY_SCRIPTS_REPO}/ssl
 echo "Create SSL files..."
 ./create-ssl-files.sh true
 mkdir -p ../../project/config
@@ -13,5 +13,5 @@ echo "Create webserver config..."
 apk add gettext
 cd ../..
 envsubst '${SSL_CERTIFICATE_FILE},${SSL_PRIVATE_KEY_FILE}' \
-< $WEBSERVER_LIB_REPO/ssl/nginx/default.conf \
-> project/config/default.conf
+< ${WEBSERVER_REPO}/ssl/nginx/default.conf \
+> project/${CONFIG_DIR}/default.conf
