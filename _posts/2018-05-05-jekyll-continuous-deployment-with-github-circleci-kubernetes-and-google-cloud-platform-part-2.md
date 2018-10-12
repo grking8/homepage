@@ -41,9 +41,7 @@ the left hand side in Google Cloud Console)
 
 7. [Create a Google Cloud service account](https://cloud.google.com/docs/authentication/getting-started) ("Creating a service account")
 
-8. Encode the contents of the JSON file downloaded in 7.
-
-`cat path/to/json | base64 | tr -d '\n'`
+8. Encode the contents of the JSON file downloaded in 7. `cat path/to/json | base64 | tr -d "\n"`
 
 9. In CircleCI, **_Settings->Projects_**. Find the repository of your Jekyll website and
 click on the wheel icon in the top right hand corner. On the left hand side, **_Build Settings->Environment Variables_**, 
