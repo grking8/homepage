@@ -35,7 +35,7 @@ subexpressions) and complex.
 
 **Metacharacters** can have a different meaning depending on the context.
 
-Further, a character can sometimes be a metacharacter and sometimes a normal text
+Further, a character can be sometimes a metacharacter and sometimes a normal text
 character, depending on the context.
 
 To use regular expressions, a **host** is required. The host can be anything 
@@ -132,7 +132,7 @@ their own language.
 
 `^` matches the start of a line, `$` matches the end of a line.
 
-As such, `^cat` matches if you have `^` (beginning of line) followed by `c`, followed
+As such, `^cat` matches if you have `^` (start of line) followed by `c`, followed
  by `a`, followed by `t`, e.g.
  
  ```bash
@@ -167,7 +167,7 @@ Similarly, `^$` matches only blank lines (lines without any characters) and
 `^` and `$` (and some other metacharacters) are special because they match a **position** in
 a line rather than an actual text character. 
 
-### Metacharacter `-` (dash) 
+### Metacharacter `-` (dash) inside a character class
 
 `-` indicates a range of characters in a character class, e.g. `[0-9]` is 
 equivalent to `[0123456789]`. Other common ranges are `[a-z]` and `[A-Z]`.
@@ -208,7 +208,7 @@ You might then add some punctuation characters, e.g.`[A-Za-z0-9,.?;]`.
 
 But what about other symbols like `*`?
 
-Eventually you might end up trying to list all ASCII characters in the character class.
+Eventually you might try to list all ASCII characters in the character class.
 
 Needless to say, such an exercise is tedious and error-prone.
  
@@ -233,23 +233,14 @@ from textual data.
 `|` allows you to combine subexpressions into an overall expression. It is known as 
 **alternation.**
 
-Its syntax is `subexpr1|subexpr2|...|subexprN` which matches anytime one of the
-subexpressions listed matches.
-
-For example, both
+Its syntax is `subexpr1|subexpr2|...|subexprN` which matches anytime one of 
+`subexpr1,..., subexprN` matches, e.g.
 
 ```bash
-printf "That Bob is a great guy" | egrep -n 'Bob|Robert'
+printf "That Bob is a great guy.\nHe and Robert are friends." | egrep -n 'Bob|Robert'
 ```
 
-and
-
-```bash
-printf "That Robert is a great guy" | egrep -n 'Bob|Robert'
-```
-
-match with the former outputting `1:That Bob is a great guy` and the latter 
-`1:That Robert is a great guy`
+matches both lines.
 
 ### Metacharacters `\<` (backslash-less than) and `\>` (backslash-greater than)
 
@@ -303,10 +294,10 @@ until no more matches are found).
  
 The quantifiers' minimum and maximum numbers are
 
-- `?`, $(\min,\max)=(0,1)$
-- `+`, $(\min,\max)=(1,+\infty)$
-- `*`, $(\min,\max)=(0,+\infty)$
-- `{min,max}`, $(\min,\max)=($`min`$,$`max`$)$
+- $(0,1)$ for `?`
+- $(1,+\infty)$ for `+`
+- $(0,+\infty)$ for `*`
+- $(\min,\max)$ for `{min,max}`
 
 For example, if 
 
@@ -390,8 +381,7 @@ outputs
 ## Backreferencing
 
 Not all versions of `egrep` support backreferencing, but for those that do, 
-it allows you to match new text that is the same as other text matched 
-earlier in the regex.
+it allows you to match text matched previously earlier in the regex.
 
 This is achieved by wrapping subexpressions in parentheses. If `(subexpr)` 
 matches, the matched text can be referred to later on in the regex as 
