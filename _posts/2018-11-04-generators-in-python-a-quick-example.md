@@ -8,90 +8,136 @@ comments: true
 {% include post-image.html name="2416585_0.jpg" width="100" height="100" 
 alt="python logo" %}
 
-Suppose you have some data in a list, and a function to process each element
-in that list. 
 
-Further, suppose you were interested in finding the first element in the list
-which, after processing, satisfied a certain condition.
+Suppose you have some URLs and want to find the first one that returns an
+error status code
 
 ```python
+import requests
 import time
 
 start = time.time()
 
 
-def process(n):
-    return n > 5
-    
-    
+def get_status_codes(urls):
+    result = {}
+    for url in urls:
+        print(f'GET {url}')
+        result[url] = requests.get(url).status_code
+    return result
 
-DATA_SIZE = 10 ** 8
-data = [i for i in range(DATA_SIZE)]
-for d in data:
-    if process(d):
-        print('*' * 50)
+
+urls = [
+    'https://pokeapi.co/api/v2/pokemon/1/',
+    'https://pokeapi.co/api/v2/pokemon/sdfsdf',
+    'https://pokeapi.co/api/v2/pokemon/2/',
+    'https://pokeapi.co/api/v2/pokemon/3/',
+    'https://pokeapi.co/api/v2/pokemon/4/',
+    'https://pokeapi.co/api/v2/pokemon/5/',
+    'https://pokeapi.co/api/v2/pokemon/6/',
+    'https://pokeapi.co/api/v2/pokemon/7/',
+    'https://pokeapi.co/api/v2/pokemon/8/',
+    'https://pokeapi.co/api/v2/pokemon/9/',
+    'https://pokeapi.co/api/v2/pokemon/10/',
+    # ... more urls
+]
+status_codes = get_status_codes(urls)
+for url, status_code in status_codes.items():
+    if status_code >= 400:
+        print(f'First error status code: {status_code}, url: {url}')
         break
-time_taken = time.time() - start
-print(f'Task completed! Time taken: {time_taken:.2f}s')
-print(f'Element found {d}')
+else:
+    print('All urls successful!')
+print(f'{time.time() - start:.2f}s')
 ```
 
-The above code might take a while to run, depending on the amount of data 
-stored in the list and the hardware on which it is run.
+which outputs
 
-However, this performance penalty is not necessary as each element in the list
-is processed in isolation - there is no need to load the whole list into
-memory.
+```
+GET https://pokeapi.co/api/v2/pokemon/1/
+GET https://pokeapi.co/api/v2/pokemon/sdfsdf
+GET https://pokeapi.co/api/v2/pokemon/2/
+GET https://pokeapi.co/api/v2/pokemon/3/
+GET https://pokeapi.co/api/v2/pokemon/4/
+GET https://pokeapi.co/api/v2/pokemon/5/
+GET https://pokeapi.co/api/v2/pokemon/6/
+GET https://pokeapi.co/api/v2/pokemon/7/
+GET https://pokeapi.co/api/v2/pokemon/8/
+GET https://pokeapi.co/api/v2/pokemon/9/
+GET https://pokeapi.co/api/v2/pokemon/10/
+First error status code: 404, url: https://pokeapi.co/api/v2/pokemon/sdfsdf
+4.52s
+```
 
-As such, a more efficient way to achieve the same outcome is to use a generator
+The problems with this approach is that a request is made to each URL, and 
+the status code of each request's response is stored in memory.
+
+This is inefficient as we are only interested in finding the first URL that
+returns an error status code.
+
+Both execution time and memory usage can be improved by using a generator
+function.  
 
 ```python
+import requests
 import time
 
 start = time.time()
 
 
-def process(n):
-    return n > 5
+def get_status_codes(urls):
+    for url in urls:
+        print(f'GET {url}')
+        yield {'url': url, 'status_code': requests.get(url).status_code}
 
 
-def my_generator():  # generator function
-    for i in range(DATA_SIZE):
-        yield i
+urls = [
+    'https://pokeapi.co/api/v2/pokemon/1/',
+    'https://pokeapi.co/api/v2/pokemon/sdfsdf',
+    'https://pokeapi.co/api/v2/pokemon/2/',
+    'https://pokeapi.co/api/v2/pokemon/3/',
+    'https://pokeapi.co/api/v2/pokemon/4/',
+    'https://pokeapi.co/api/v2/pokemon/5/',
+    'https://pokeapi.co/api/v2/pokemon/6/',
+    'https://pokeapi.co/api/v2/pokemon/7/',
+    'https://pokeapi.co/api/v2/pokemon/8/',
+    'https://pokeapi.co/api/v2/pokemon/9/',
+    'https://pokeapi.co/api/v2/pokemon/10/',
+    # ... more urls
+]
 
-
-DATA_SIZE = 10 ** 8
-data = my_generator()  # calling generator fn returns generator object
-while True:
-    d = next(data)
-    if process(d):
-        print('*' * 50)
+generator = get_status_codes(urls)
+for i in range(len(urls)):
+    result = next(generator)
+    status_code, url = result['status_code'], result['url']
+    if status_code >= 400:
+        print(f'First error status code: {status_code}, url: {url}')
         break
-time_taken = time.time() - start
-print(f'Task completed! Time taken: {time_taken:.2f}s')
-print(f'Element found {d}')
+else:
+    print('All urls successful!')
+print(f'{time.time() - start:.2f}s')
 ```
 
-which avoids loading all the data into memory.
+which outputs
 
-Instead, Python uses lazy loading to only return one element each time `next` is called.
+```
+GET https://pokeapi.co/api/v2/pokemon/1/
+GET https://pokeapi.co/api/v2/pokemon/sdfsdf
+First error status code: 404, url: https://pokeapi.co/api/v2/pokemon/sdfsdf
+0.85s
+```
 
-The above can be shortened to 
+The same performance gain can be achieved without using a generator, e.g.
 
 ```python
-import time
-
-start = time.time()
-
-
-def process(n):
-    return n > 5
-
-
-DATA_SIZE = 10 ** 8
-d = next(i for i in range(DATA_SIZE) if process(i))
-print('*' * 50)
-time_taken = time.time() - start
-print(f'Task completed! Time taken: {time_taken:.2f}s')
-print(f'Element found {d}')
+for url in urls:
+    status_code = requests.get(url).status_code
+    if status_code >= 400:
+        print(f'First error status code: {status_code}, url: {url}')
+        break
+else:
+    print('All urls successful!')
 ```
+
+However, using a generator and `next` can be more concise, e.g. if the requests are not made
+in a `for` loop.
