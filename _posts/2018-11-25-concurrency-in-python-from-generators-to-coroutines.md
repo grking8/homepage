@@ -8,252 +8,353 @@ comments: true
 {% include post-image.html name="2416585_0.jpg" width="100" height="100" 
 alt="python logo" %}
 
-Add disclaimer and references (fluent python and mark lutz learning python)
+{% include disclaimer.md %}
 
-In the previous post we saw an example of when generators in Python can be
-useful.
+## References
 
-In this post, we will look at generators at a bit more detail before introducing
-coroutines, which basically take the basic syntax we have seen so far for 
-a generator and adds features to do more things.
+- [Fluent Python, 1st Edition - Luciano Ramalho](http://shop.oreilly.com/product/9780596528126.do)
+- [Learning Python, 5th Edition - Mark Lutz](http://shop.oreilly.com/product/0636920028154.do)
+- [Tall, Snarky Canadian](https://snarky.ca/how-the-heck-does-async-await-work-in-python-3-5/)
 
-One of these things, is to enable concurrency.
+<br>
+<br>
 
-To look at generators in a bit more detail, let's first take a look at iterators
-and iterables.
+---
 
-We said in the previous post that generators are sort of virtual, on-demand 
-sequences. Well, what about actual physically stored sequences?
+<br>
+<br>
 
-Iterables are any object that supports having `.__iter__` called on it, and the
-object returned is an iterator.
+In the [previous post](/2018/11/04/generators-in-python-a-quick-example.html) we saw an example usage of generators in Python.
 
-The shorthand is `iter()`.
 
-The concept of iterator relies on just two things: you can call next to get the
-next element, and if there is no next, raise a StopIteration exception.
+In this post, we will take another look at generators, in particular some of the 
+background behind them, namely **iterables and iterators.**
 
-Thus the only real constraint is this idea of next. So this is why the set of 
-iterable objects is the set of sequences.
+We will then introduce **coroutines,** syntactically identical to 
+generators apart from some additional features.
 
-Sequences can be real and physically stored, so they must also be finite.
+These extra features can be used to achieve **single-threaded concurrency,** 
+the subject of the last section.
 
-Or sequences can be virtual, not stored in memory, producing values on demand,
-meaning they can be infinite.
+## Iterables and iterators 
 
-Some examples
+We mentioned before how generators are sort of virtual, on-demand 
+sequences, in contrast to physically stored sequences such as lists, tuples, and
+strings. 
 
-Physical, real sequences - usual suspects - lists, strings, tuples,..
+Both kinds of sequences, however, are members of a more general group, iterable objects.
 
-You can convince yourself these are all iterables by calling `iter` on each
-of them.
+An **iterable object** is any object with an `__iter__()` method returning an **iterator** 
+when called.
 
-```python
-x = [1, 2, 3]
-for i in x:
-    print(i)
-    
-it = iter(x)  # returns an iterator
-for i in it:
-    print(i)
-    
-for i in x:
-    print(i)  # works
-    
-for i in it:
-    print(i)  # does not work as the iterator is exhausted
-```
+An iterator, by definition, has a `__next__()` method. The first time it is called,
+the first item is returned, the second time it is called, the second item, etc.; 
+if no items are left, a `StopIteration` exception is raised. It also
+has an `__iter__()` method that returns itself, i.e. every iterator is iterable.
 
-Bascially the `for` loop when you loop over the elements in a list is
+NB: Python provides a couple of builtin shorthands, `next()` for
+`__next__()` and `iter()` for `__iter__()` .
+
+### Examples
+
+#### Physical (real) sequences
+
+Because physical sequences are stored in memory, they must be finite. Lists, 
+tuples, strings are common examples.
+
+You can call `iter()` on any of the above, e.g.
 
 ```python
 x = [1, 2, 3]
-for i in x:
-    print(i)
-    
-# under the hood...
-# in the for loop, create an iterator
-it = iter(x)
+it = iter(x)  # list_iterator
+# consume the iterator
 while True:
     try:
-        print(next(i))
+        next(it)
     except StopIteration:
+        print('No more items left')
         break
 ```
 
-You can do the same with a string, tuple.
-
-Virtual sequences, some examples are dicts, file objects, 
+Consuming the iterator in this way is actually what happens under the hood when you
+use a `for` loop, i.e. it is equivalent to
 
 ```python
-In [40]: iter(d)
-Out[40]: <dict_keyiterator at 0x7fa1337df278>
-
-In [41]: iter(d.keys())
-Out[41]: <dict_keyiterator at 0x7fa1337902c8>
-
-In [42]: iter(d.values())
-Out[42]: <dict_valueiterator at 0x7fa1337908b8>
-
-In [43]: iter(d.items())
-Out[43]: <dict_itemiterator at 0x7fa1337903b8>
-
+for item in x:
+    item
 ```
 
-`enumerate` is also a virtual sequence
+You can also use a `for` loop on the iterator directly
 
 ```python
-In [44]: x=enumerate(('a','b'))
-
-In [45]: x
-Out[45]: <enumerate at 0x7fa138039798>
-
-In [46]: it = iter(x)
-
-In [47]: it
-Out[47]: <enumerate at 0x7fa138039798>
-
-In [48]: it is x
-Out[48]: True
-
-In [49]: next(it)
-Out[49]: (0, 'a')
-
-In [50]: next(x)
-Out[50]: (1, 'b')
+it = iter(x)  # once an iterator is exhausted, need to recreate it
+for item in it:
+    item
 ```
 
-Notice how the iterable and the iterator are the same object in memory. Which is
-why when you call next on one you pick up from the point of the last call on 
-the other.
+You can replace `x = [1, 2, 3]` with `x = (1, 2, 3)` or `x = '123'`, the code
+works in the same way.
 
+#### Virtual (on-demand) sequences
 
-So the set of iterators or iterable objects is the set of all sequences, real 
-or virtual.
+This group basically contains any iterable that is not a physical sequence.
 
-Where do generators fit in this? We have seen in-built virtual sequences that are
-iterables like file objects, enumerate, dicts, range
+Because such sequences return items in the sequence one at a time when 
+requested, and do not store all the items in memory, they can be infinite.
 
-Generators are the same but user defined, so basically they are a language
-construct so that the programmer as well as using built-in virtual sequences,
-can also create their own.
+There are various builtin iterables that are not physical sequences. Common 
+examples are
 
-Example of what `for` does under the hood when looping through a range
+- File, `enumerate`, and `range` objects
+- Dictionaries
+- Sets
+
+`enumerate` and file objects are iterators as well as iterables
 
 ```python
-r = range(0, 10)
-it = iter(r)
-In [60]: while True:
-    ...:     try:
-    ...:         print(next(it))
-    ...:     except StopIteration:
-    ...:         break
-    ...: 
+x = enumerate(('a', 'b'))  # enumerate object (not a physical sequence)
+it = iter(x)
+it is x  # True
+y = open('myfile.py')  # file object (not a physical sequence)
+next(y)  # `y` is an iterator; gets first line of file
 ```
 
-This is why a generator object is also sometimes called a generator iterator.
+Of course, this works because both file and `enumerate` objects have order.
 
-We can, for example, create an infinite sequence
+Dictionaries and sets, on the other hand, **do not have order.** It is not surprising
+then that they are not iterators.
 
 ```python
+d = {'a': 1, 'b': 2}
+next(d)  # TypeError: 'dict' object is not an iterator
+s = {1, 2, 3}
+next(s)  # TypeError: 'set' object is not an iterator
+```
+
+But if they do not have order, how can they be iterable?
+
+An arbitrary order is used, which is whatever Python decides (thus the order 
+might be different each time the program is run). 
+
+```python
+s = {1, 2, 3}
+it = iter(s)  # set_iterator
+next(it)  # 1; no guarantee to be the same the next time the script is run
+d = {'a': 1, 'b': 2}
+it1 = iter(d)  # dict_keyiterator
+list(it1)  # ['a', 'b']; no guarantee to be the same the next time the script is run
+it2 = iter(d.keys())  # dict_keyiterator
+list(it2)  # ['a', 'b']; no guarantee to be the same the next time the script is run
+```
+
+`d.values()` and `d.items()` are also iterable.
+
+However, just because an iterable object has a predfined, fixed order does 
+not mean it is an iterator, e.g. a list is not an iterator 
+
+```python
+x = [1, 2]
+next(x)  # TypeError: 'list' object is not an iterator
+```
+
+This is because you might want to create multiple iterators from the same 
+iterable and iterate through them independently, e.g. in  a nested `for` loop
+
+```python
+x = enumerate('a', 'b', 'c')  # x is an iterator
+for i, _ in x:
+    for j, _ in x:
+        print(i, j)
+# 0 1
+# 0 2
+x = [0, 1, 2]  # x is not an iterator
+it = iter(x)
+it is x  # False
+for i in x:
+    for j in x:
+        print(i, j)
+# 0 0
+# 0 1
+# 0 2
+# 1 0
+# 1 1
+# 1 2
+# 2 0
+# 2 1
+# 2 2
+```
+
+Remember, the sequences in this section are not physical - their values are not stored in 
+memory like the values of a string, list, tuple, etc. are.
+
+## Generators
+
+Generators are iterables. They are also iterators, which is why they are sometimes
+referred to as generator iterators.
+
+They are like the virtual sequences discussed above except they are
+not builtins that come with the Python language, rather they are iterators
+created by the user.
+
+For example, we can use a generator to create an infinite sequence, e.g. Fibonacci
+
+```python
+# generator function
 def fib():
     a, b = 0, 1
-    while True:
+    while 1:
       yield a + b
       tmp = b
       b = a + b
       a = tmp
       
-gen = fib()
-next(gen)
-next(gen)
-next(gen)
-next(gen)
-next(gen)
-next(gen)
+gen = fib()  # generator object
+it = iter(gen)
+it is gen  # True
+next(gen)  # 1
+next(gen)  # 2
+next(gen)  # 3
+next(gen)  # 5
+next(gen)  # 8
+next(gen)  # 13
 # infinite for loop!
 for x in gen:
-    print(x)
+    x
 ```
 
-Here is an example of a finite virtual user created sequence
+or a finite sequence
 
 ```python
+# generator function
 def g():
     for i in range(10):
         yield i ** 2
         
-gen = g()
-while True:
+gen = g()  # generator object
+while 1:
     try:
-        print(next(gen))
+        next(gen)
     except StopIteration:
         print('No more values')
         break
 ```
 
-Coroutines are basically the same thing as generators. However, what distinguishes
-them is that they are generators (which only use `yield` syntax in the way we 
-have seen up until now) with extra syntax.
+Generator objects are created from generator functions (like in the above
+two examples) or generator expressions.
 
-What are coroutines? In simple terms, just means to 
+In generator functions, `yield` is used to produce the values sent when `next()`
+is called on the generator iterator.
 
-, "Coroutines are computer program components that generalize subroutines for 
+## Coroutines
+
+In Python, from a language point of view, coroutines are basically the same 
+thing as generators. Any distinction between the two is typically somewhat 
+arbitrary and user defined. 
+
+However, we cannot begin to discuss coroutines and start understanding 
+them until some new syntax is introduced.
+
+But before doing so, let's remind ourselves that coroutines are not specific 
+to Python. They are a general concept in computer science: 
+
+> "Coroutines are computer program components that generalize subroutines for 
 nonpreemptive multitasking, by allowing multiple entry points for suspending 
 and resuming execution at certain locations". That's a rather technical way of 
-saying, "coroutines are functions whose execution you can pause"
+saying, "coroutines are functions whose execution you can pause" 
+(Tall, Snarky Canadian)
 
-https://snarky.ca/how-the-heck-does-async-await-work-in-python-3-5/
+This pausing of a function's execution is something we have already seen. It's
+what happens when a `yield` is reached and is how a generator produces values
+on demand.
 
-So whilst the `yield` syntax we have seen so far, does let you pause exection
-of a function and to receive values from it, it does lack some things like
-sending values to that function, getting that function to return a value, error
-handling, closing the function, etc.
+So far, we have only seen values being pulled from the generator via `next()`. 
 
-So far, we have only seen the syntax `yield <value>` and the `next` method.
+One of the extra features we need to consider in order to better understand 
+coroutines is *pushing* values.
 
-Basically, this is all we can do with the generator. Once we have a generator
-iterator, all we can do is pull values from it, calling `next` until it is 
-exhausted.
+The other main extra features are closing the generator, getting the generator 
+to return a value, and exception handling.
 
-The first change is to allow a push kind of usage, where the caller sends values
-to the coroutine, and the values produced by the coroutine depend on the 
-values sent in.
+Typically, whenever one or more of these extra features is present, we no longer
+refer to the object as a generator but as a coroutine. 
 
-An example of this is running average
+### Examples
+
+#### Pushing values; closing the coroutine
 
 ```python
+# compute running average
 def averager():
     total = 0.0
     count = 0
     average = None
     while True:
-        term = yield average
+        term = yield average  # assigning an expression containing `yield`; looks different!
         total += term
         count += 1
         average = total / count
         
-coro = averager()
-next(coro)  # priming the coroutine - cant send a value to a coroutine unless 
-# it is suspended; the yield average on the right hand side of the equal 
-# gets run first - ignore everything else on the line. so we yield None
-# which is what is returned when next is called. then, as usual, the function 
-# is paused
-coro.send(10)  # pick up where we left off, just like before, at yield, only
-# now yield takes the value of 10, the argument in send, and is assigned to term
-# the average is calculated, and is yielded, the coroutines is paused, so the 
-# return value of coro.send(10) is the current average
-coro.send(20)  # average gets updated and gets returned again
+coro = averager()  # generator object, just like before
+next(coro)  # None
+coro.send(10)  # 10
+coro.send(20)  # 15
+coro.send(6)  # 12
 import inspect
 inspect.getgeneratorstate(coro)  # 'GEN_SUSPENDED'
 coro.close()
 inspect.getgeneratorstate(coro)  # 'GEN_CLOSED 
 ```
 
-This works but have to close the coroutine which is where `close` comes into 
-play.
+The way to understand `next(coro)` is to ignore the 
+assignment and only consider the expression to the right of the equal sign, i.e.
 
-The next thing to look at is how a coroutine can return a value
+```python
+total = 0.0
+count = 0
+average = None
+while True:
+    yield average  # ignore everything to the left of `yield`
+```
+
+Thus `next(coro)` returns `None` and the coroutine is paused at `yield`.
+
+`averager()` computes a running average. As we haven't given it
+any values yet, no average can be computed which is why `next(coro)` returns 
+`None`.
+
+The way to give a value `x` to `averager()` is to do `coro.send(x)`. Then why 
+bother with `next(coro)`, why don't we just do `coro.send(10)` straight away?
+
+This is because a coroutine can only accept values when it is suspended. `next(coro)` 
+"primes" the coroutine and makes it ready to start accepting values (another 
+way to prime it is `coro.send(None)`).
+
+Once the coroutine is primed, `coro.send(10)` resumes the coroutine where it 
+was paused at `yield average`. Before, when `yield` was the only expression in
+the line, we just moved to the next line in the body of the function definition.
+
+Now, there is an assignment to take care of. What Python does is to take the value
+sent in, here `10`, and assign it to `term` (you can think of `10` as replacing
+`yield average`). 
+
+`average` now evaluates correctly to `10`, and because we are in a `while` loop,
+we `yield average` just like we did before when calling `next(coro)`, which is 
+what `coro.send(10)` returns.
+
+The process is repeated when `coro.send(20)` is run. The average is updated to
+take into account the new value of `20`, and the updated average is returned by 
+`coro.send(20)`.
+
+Thus we can keep sending values into the coroutine with `coro.send()`, and get
+back each time the updated average.
+
+Once we have sent in our last value, we could just carry on with the rest of
+our program. However, this will leave our coroutine paused. The correct thing to 
+do is to close the coroutine once the last value has been sent in.
+
+This is done using `coro.close()`
+
+#### Returning a value
 
 ```python
 def coro():
@@ -261,22 +362,20 @@ def coro():
     return 10
     
 c = coro(c)
-next(c)  # returns 5
-next(c)  # fall off the function body and raise StopIteration exception just
-# like before only know the value of return is in the exception
-
+next(c)  # 5
+next(c)  # fall off the function body (no more `yield`)
+# Raise `StopIteration` exception just like before
+# However, 10 is available in the exception
 c = coro(c)
-while True:
+while 1:
     try:
-        print(next(c))
+        next(c)  # 5
     except StopIteration as e:
-        print(f'Value returned by coroutine is {e.value}')
+        print(f'Value returned by coroutine is {e.value}')  # 'Value returned by coroutine is 10'
         break
-# 5
-# value returned by coroutine is 10
 ```
 
-For our average example, this looks like this
+We can now update our running average example to return a value 
 
 ```python
 def averager2():
@@ -286,14 +385,15 @@ def averager2():
     while True:
         term = yield
         if term is None:
-            break  # in order to return a value, a coroutine must terminate normally
+            break  # in order to return a value, a coroutine must terminate 
+            # normally, i.e. cannot be stuck in an infinite loop
         total += term
         count += 1
         average = total / count
     return {'count': count, 'average': average}
     
 coro = averager2()
-next(averager2)  # prime the coroutine, can also be done using `coro.send(None)`
+next(averager2)  # prime the coroutine
 coro.send(3)
 coro.send(10)
 coro.send(34)
@@ -304,93 +404,123 @@ except StopIteration as e:
       print(e.value)  # {'count': 4, 'average': 12.5}
 ```
 
-Exception handling using `throw`
+#### Exception handling
 
 ```python
 class DemoException(Exception):
     pass
   
 def demo_exc_handling():
-    print('started')
-    while True:
+    while 1:
         try:
-            x = yield
+            x = yield  # equivalent to `x = yield None`
         except DemoException:
-            print('demo exception handled. continuing ...')
+            print('Demo exception handled. Continuing...')
         else:
-            print(f'coroutine recevied value of {x}')
+            print(f'Coroutine received value of {x}')
             
 coro = demo_exc_handling()
-next(coro)  # returns None, prints 'started'
-coro.send(34)
-# coroutine recevied value of 34
-coro.send(343444)
-# 'coroutine recevied value of 343444'
+next(coro)  # None
+coro.send(34) # 'Coroutine received value of 34'
+coro.send(343444) # 'Coroutine received value of 343444'
 coro.throw(DemoException)
-# 'demo exception handled. continuing ...'
-coro.send('hi')
-# 'coroutine recevied value of hi'
+# 'Demo exception handled. Continuing...'
+coro.send('hi') # 'Coroutine received value of hi'
 ```
 
-Now we have seen what coroutines are and them in action, let's look at concurrency
-Concurrency does not  equal parallelism, concurrency just means doing multiple tasks
-at once, e.g. running two functions at the same time. Concurrency is writing 
-code to execute independently of other parts, even if it all happens in a single
-thread. concurrency means given a unit of time, multiple tasks make progress.
+## Concurrency and coroutines
+
+Concurrency means doing multiple tasks at once, i.e. given a unit of time, 
+multiple tasks make progress.
+
+Concurrency can be single or multithreaded. Here, we will be looking at single
+threaded concurrency.
+
+NB: When running tasks on multiple threads, and those threads are on different 
+CPUs, this is parallelism. In Python, although multithreading is supported, 
+because of the Global Interpreter Lock (GIL), multithreading always happens on 
+one CPU, thus parallelism is not possible. Only concurrency is possible in 
+Python.
+
+Let's suppose we have two functions, `func1` and `func2`.
+
+`func1` takes two seconds to run. `func2` takes three seconds to run, on condition
+that `func1` has finished running. If `func1` has not finished running, `func2`
+hangs and never finishes.
+
+The obvious solution is to call `func1` first and then `func2`, leading to a 
+total running time of five seconds.
+
+If we called `func2` first, our script would hang forever.
+
+However, with concurrency, we could start `func1` and immediately after
+start `func2`.
+ 
+`func1` would finish first after two seconds. About one second later, `func2` would
+also be finished (it has been running for three seconds and `func1` has finished
+running). This gives us a total running time of about three seconds.
+
+We could achieve the above by running `func1` and `func2` in separate threads.
+
+However, below we will achieve the same result in a single thread using a simpler 
+method based on coroutines.
 
 ```python
-impor time
+import time
 
-
-def sleep(secs, coro_number):
+def coroutine1():
     start = time.time()
-    while True:
-        if time.time() - start > secs:
-            print(f'Coroutine {coro_number} finished sleeping')
-            return f'Done in {time.time() - start:.2f}s'
-        msg = yield 'Not finished sleeping'
-        print(f'Coroutine {coro_number} received message: {msg}')
-        
-        
+    while time.time() - start < 2:
+        yield 'Running...'
+    yield 'Done'
+
+def coroutine2():
+    start = time.time()
+    coro1_done = False
+    while not (time.time() - start >= 3 and coro1_done):
+        coro1_done = yield 'Running...'
+    yield 'Done'
+
 def run_loop():
-    print('Starting main loop...')
+    print('Starting event loop...')
     start = time.time()
-    coro1 = sleep(2, 1)
-    coro2 = sleep(3, 2)
-    # prime coroutines
-    next(coro1)
-    next(coro2)
+    coro1 = coroutine1()
+    coro2 = coroutine2()
+    next(coro2)  # prime `coro2`
+    coro1_done, coro2_done = False, False
     current_coro = 'coro1'
-    finished_coros = []
-    results = []
-    while True:
-        if current_coro == 'coro1' and current_coro not in finished_coros:
-            try:
-                response = coro1.send('Are you awake coro1?')
-                print(response)
-            except StopIteration as e:
-                finished_coros.append('coro1')
-                results.append(e.value)
-            if 'coro2' not in finished_coros:
+    while not (coro1_done and coro2_done):
+        time.sleep(0.25)  # check progress every 0.25 seconds
+        if current_coro == 'coro1' and not coro1_done:
+            status = next(coro1)
+            print(f'coroutine1 status: {status}')
+            if status == 'Done':
+                coro1_done = True
+            if not coro2_done:
                 current_coro = 'coro2'
-        elif current_coro == 'coro2' and current_coro not in finished_coros:
-            try:
-                response = coro2.send('Are you awake coro2?')
-                print(response)
-            except StopIteration as e:
-                finished_coros.append('coro2')
-                results.append(e.value)
-            if 'coro1' not in finished_coros:
+        elif current_coro == 'coro2' and not coro2_done:
+            status = coro2.send(coro1_done)
+            print(f'coroutine2 status: {status}')
+            if status == 'Done':
+                coro2_done = True
+            if not coro1_done:
                 current_coro = 'coro1'
-        if 'coro1' in finished_coros and 'coro2' in finished_coros:
-            print('Completed.')
-            break
-    print(f'Main loop finished in {time.time() - start:.2f}s')
-    print('results', results)
-    
-    
-run_loop()
+    print(f'Event loop finished in {time.time() - start:.2f}s')
 ```
 
-Next post - more on coroutines, extending them via `yield from`
-
+```
+Starting event loop...
+coroutine1 status: Running...
+coroutine2 status: Running...
+coroutine1 status: Running...
+coroutine2 status: Running...
+coroutine1 status: Running...
+coroutine2 status: Running...
+coroutine1 status: Running...
+coroutine2 status: Running...
+coroutine1 status: Done
+coroutine2 status: Running...
+coroutine2 status: Running...
+coroutine2 status: Done
+Event loop finished in 3.02s
+```

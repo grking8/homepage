@@ -1,4 +1,4 @@
-_Disclaimer: In no way, shape, or form do I claim any of the content in this 
+_Disclaimer: In no way, shape, or form do I claim all the content in this 
 post to be my own work / not copied, paraphrased, or derived in any other way
 from an external source._
  
