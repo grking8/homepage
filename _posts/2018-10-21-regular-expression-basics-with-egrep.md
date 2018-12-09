@@ -11,8 +11,7 @@ comments: true
 
 ## References
 
-[Mastering Regular Expressions, 3rd Edition - Jeffrey Friedl](http://shop
-.oreilly.com/product/9780596528126.do) (highly recommended)
+[Mastering Regular Expressions, 3rd Edition - Jeffrey Friedl](http://shop.oreilly.com/product/9780596528126.do) (highly recommended)
 
 <br>
 <br>
