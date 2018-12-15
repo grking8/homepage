@@ -6,20 +6,6 @@ comments: true
 ---
 
 {% include post-image.html name="download.jpeg" width="170" height="100" alt="regular expressions" %}
- 
-{% include disclaimer.md %}
-
-## References
-
-[Mastering Regular Expressions, 3rd Edition - Jeffrey Friedl](http://shop.oreilly.com/product/9780596528126.do) (highly recommended)
-
-<br>
-<br>
-
----
-
-<br>
-<br>
 
 In this post we will introduce ourselves to **regular expressions**.
 
@@ -127,7 +113,7 @@ Thus if you wanted to match `grey` or `gray`, you could use the regex `gr[ea]y`.
 Character classes have their own metacharacters and should be considered as 
 their own language.
 
-### Metacharacters `^` (caret) and `$` (dollar)
+### `^` (caret) and `$` (dollar)
 
 `^` matches the start of a line, `$` matches the end of a line.
 
@@ -166,7 +152,7 @@ Similarly, `^$` matches only blank lines (lines without any characters) and
 `^` and `$` (and some other metacharacters) are special because they match a **position** in
 a line rather than an actual text character. 
 
-### Metacharacter `-` (dash) inside a character class
+### `-` (dash) inside a character class
 
 `-` indicates a range of characters in a character class, e.g. `[0-9]` is 
 equivalent to `[0123456789]`. Other common ranges are `[a-z]` and `[A-Z]`.
@@ -181,7 +167,7 @@ Also, if `-` is the **first character** in a character class, it is not a metach
 Thus if you wanted to match `a` or `-`, you could use the character class `[-a]`.
  
  
-### Metacharacter `^` (caret) inside a character class
+### `^` (caret) inside a character class
 
 When `^` is the first character inside a character class, it negates the character class, 
 i.e. the character class matches all characters **not** listed in the character class.
@@ -196,7 +182,7 @@ Thus the meaning of `^` as a metacharacter depends on the context.
 Further, if `^` is in a character class but not the first character, it is a normal text
 character.
  
-### Metacharacter `.` (dot)
+### `.` (dot)
 
 Suppose you wanted a character class that matched every possible character. 
 
@@ -215,8 +201,7 @@ Unsurprisingly, there is a shorthand for this.
 
 `.` is shorthand for a character class that matches all possible characters.
 
-However, `.` is a normal text character inside a character class (which makes sense
-as otherwise you would have a character class inside a character class).
+However, `.` is a normal text character inside a character class.
 
 Suppose you wanted a regex to match the date 19th March 1976.
 
@@ -227,7 +212,7 @@ However, it also matches `"lottery numbers: 19 203319 7639"`.
 This sort of problem is typical when using regex to extract information 
 from textual data.
 
-### Metacharacter `|` (pipe)
+### `|` (pipe)
 
 `|` allows you to combine subexpressions into an overall expression. It is known as 
 **alternation.**
@@ -241,7 +226,7 @@ printf "That Bob is a great guy.\nHe and Robert are friends." | egrep -n 'Bob|Ro
 
 matches both lines.
 
-### Metacharacters `\<` (backslash-less than) and `\>` (backslash-greater than)
+### `\<` (backslash-less than) and `\>` (backslash-greater than)
 
 `\<` gets the position at the start of a "word" and `\>` gets the position at the end
 of the "word" (these can also be referred to as metasequences as they consist of more
@@ -274,7 +259,7 @@ outputs
 2:What does concatenation mean?
 ```
 
-### Metacharacters `?` (question mark), `+` (plus), `*` (star), and `{min,max}` (curly braces)
+### `?` (question mark), `+` (plus), `*` (star), and `{min,max}` (curly braces)
 
 These metacharacters are **quantifiers.**
 
@@ -461,3 +446,17 @@ does
 ```
 1:weather WeaTher
 ```
+
+<br>
+<br>
+
+---
+
+<br>
+<br>
+
+{% include disclaimer.md %}
+
+## References
+
+[Mastering Regular Expressions, 3rd Edition - Jeffrey Friedl](http://shop.oreilly.com/product/9780596528126.do) (highly recommended)
