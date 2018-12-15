@@ -61,8 +61,8 @@ base_url = 'https://pokeapi.co/api/v2/pokemon'
 no_pages = 10
 g = get_page_urls(base_url, no_pages)  # does not run any code in the body of the function
 type(g)  # `g` is of type `generator`
-next(g)  # returns `'https://pokeapi.co/api/v2/pokemon/1'`
-next(g)  # returns `'https://pokeapi.co/api/v2/pokemon/2'`
+next(g)  # returns 'https://pokeapi.co/api/v2/pokemon/1'
+next(g)  # returns 'https://pokeapi.co/api/v2/pokemon/2'
 ```
 
 The equivalent code using a generator expression is
@@ -72,8 +72,8 @@ base_url = 'https://pokeapi.co/api/v2/pokemon'
 no_pages = 10
 g = (f'{base_url}/{str(i)}' for i in range(1, no_pages + 1))
 type(g)  # `g` is of type `generator`
-next(g)  # returns `'https://pokeapi.co/api/v2/pokemon/1'`
-next(g)  # returns `'https://pokeapi.co/api/v2/pokemon/2'`
+next(g)  # returns 'https://pokeapi.co/api/v2/pokemon/1'
+next(g)  # returns 'https://pokeapi.co/api/v2/pokemon/2'
 ```
 
 Using a generator allows you to "pay as you go", i.e. pay for the memory
@@ -93,7 +93,7 @@ import requests
 
 start = time.time()
 
-def get_page_urls_status_codes(base_url, no_pages):
+def get_status_codes(base_url, no_pages):
     result = []
     for i in range(1, no_pages + 1):
         url = f'{base_url}/{str(i)}'
@@ -105,7 +105,7 @@ def get_page_urls_status_codes(base_url, no_pages):
     
 base_url = 'https://pokeapi.co/api/v2/pokemon'
 no_pages = 10
-status_codes = get_page_urls_status_codes(base_url, no_pages)
+status_codes = get_status_codes(base_url, no_pages)
 print(f'{time.time() - start:.2f}s')
 ```
 
@@ -136,22 +136,22 @@ Clearly, this is not scaleable.
 
 Generators to the rescue again?
 
-Unfortunately, generators as we have seen them so far cannot be used to solve 
-this problem (generators in Python are syntactically very similar to *coroutines*, 
+Unfortunately, generators as we have seen so far cannot be used to solve 
+this problem (generators in Python are syntactically very similar to **coroutines**, 
 used extensively in the standard library module `asyncio` to enable 
 asynchronous programming, which *can* solve the issue).
 
-However, what a generator is able to do is split up the running time, and make it
+However, a generator does split up the running time, making it
 easier to write code in between each request.
 
-It also means if we have a stopping condition, we only incur running time up
+It also means if we have a stopping condition, we only incur running time
 until the condition is met.
 
 ```python
 import time
 import requests
 
-def get_page_url_status_codes(base_url, no_pages):
+def get_status_codes(base_url, no_pages):
     for i in range(1, no_pages + 1):
         url = f'{base_url}/{str(i)}'
         r = requests.get(url)
@@ -161,7 +161,7 @@ def get_page_url_status_codes(base_url, no_pages):
 
 base_url = 'https://pokeapi.co/api/v2/pokemon'
 no_pages = 10
-g = get_page_url_status_codes(base_url, no_pages)  # does not run any code in the body of the function
+g = get_status_codes(base_url, no_pages)  # does not run any code in the body of the function
 start = time.time()
 next(g) >= 400  # `next(g)` returns 200, continue
 print(f'{time.time() - start:.2f}s')  # 0.89s

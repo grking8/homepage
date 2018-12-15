@@ -8,24 +8,7 @@ comments: true
 {% include post-image.html name="2416585_0.jpg" width="100" height="100" 
 alt="python logo" %}
 
-{% include disclaimer.md %}
-
-## References
-
-- [Fluent Python, 1st Edition - Luciano Ramalho](http://shop.oreilly.com/product/9780596528126.do)
-- [Learning Python, 5th Edition - Mark Lutz](http://shop.oreilly.com/product/0636920028154.do)
-- [Tall, Snarky Canadian](https://snarky.ca/how-the-heck-does-async-await-work-in-python-3-5/)
-
-<br>
-<br>
-
----
-
-<br>
-<br>
-
 In the [previous post](/2018/11/04/generators-in-python-a-quick-example.html) we saw an example usage of generators in Python.
-
 
 In this post, we will take another look at generators, in particular some of the 
 background behind them, namely **iterables and iterators.**
@@ -109,7 +92,7 @@ examples are
 - Dictionaries
 - Sets
 
-`enumerate` and file objects are iterators as well as iterables
+File and `enumerate` objects are iterators as well as iterables
 
 ```python
 x = enumerate(('a', 'b'))  # enumerate object (not a physical sequence)
@@ -119,7 +102,7 @@ y = open('myfile.py')  # file object (not a physical sequence)
 next(y)  # `y` is an iterator; gets first line of file
 ```
 
-Of course, this works because both file and `enumerate` objects have order.
+Of course, this works because both `enumerate` and file objects have order.
 
 Dictionaries and sets, on the other hand, **do not have order.** It is not surprising
 then that they are not iterators.
@@ -139,12 +122,12 @@ might be different each time the program is run).
 ```python
 s = {1, 2, 3}
 it = iter(s)  # set_iterator
-next(it)  # 1; no guarantee to be the same the next time the script is run
+next(it)  # no guarantee to be same value next time script is run
 d = {'a': 1, 'b': 2}
 it1 = iter(d)  # dict_keyiterator
-list(it1)  # ['a', 'b']; no guarantee to be the same the next time the script is run
+list(it1)  # no guarantee to be same value next time script is run
 it2 = iter(d.keys())  # dict_keyiterator
-list(it2)  # ['a', 'b']; no guarantee to be the same the next time the script is run
+list(it2)  # no guarantee to be same value next time script is run
 ```
 
 `d.values()` and `d.items()` are also iterable.
@@ -193,7 +176,7 @@ Generators are iterables. They are also iterators, which is why they are sometim
 referred to as generator iterators.
 
 They are like the virtual sequences discussed above except they are
-not builtins that come with the Python language, rather they are iterators
+not builtins that come with the Python language, but iterables
 created by the user.
 
 For example, we can use a generator to create an infinite sequence, e.g. Fibonacci
@@ -261,26 +244,26 @@ to Python. They are a general concept in computer science:
 nonpreemptive multitasking, by allowing multiple entry points for suspending 
 and resuming execution at certain locations". That's a rather technical way of 
 saying, "coroutines are functions whose execution you can pause" 
-(Tall, Snarky Canadian)
+[Tall, Snarky Canadian](https://snarky.ca/how-the-heck-does-async-await-work-in-python-3-5/)
 
 This pausing of a function's execution is something we have already seen. It's
 what happens when a `yield` is reached and is how a generator produces values
 on demand.
 
-So far, we have only seen values being pulled from the generator via `next()`. 
+So far, we have only seen values *pulled* from a generator using `next()`. 
 
 One of the extra features we need to consider in order to better understand 
 coroutines is *pushing* values.
 
-The other main extra features are closing the generator, getting the generator 
-to return a value, and exception handling.
+The other main extra features are *closing the generator, getting the generator 
+to return a value, and exception handling.*
 
 Typically, whenever one or more of these extra features is present, we no longer
 refer to the object as a generator but as a coroutine. 
 
 ### Examples
 
-#### Pushing values; closing the coroutine
+#### Pushing values, closing the coroutine
 
 ```python
 # compute running average
@@ -289,7 +272,7 @@ def averager():
     count = 0
     average = None
     while True:
-        term = yield average  # assigning an expression containing `yield`; looks different!
+        term = yield average  # assigning an expression containing `yield`
         total += term
         count += 1
         average = total / count
@@ -319,19 +302,20 @@ while True:
 Thus `next(coro)` returns `None` and the coroutine is paused at `yield`.
 
 `averager()` computes a running average. As we haven't given it
-any values yet, no average can be computed which is why `next(coro)` returns 
-`None`.
+any values yet, no average can be computed thus `next(coro)` returning 
+`None` is coherent.
 
-The way to give a value `x` to `averager()` is to do `coro.send(x)`. Then why 
-bother with `next(coro)`, why don't we just do `coro.send(10)` straight away?
+The way to pass a value `x` to `averager()` is `coro.send(x)`.
 
-This is because a coroutine can only accept values when it is suspended. `next(coro)` 
-"primes" the coroutine and makes it ready to start accepting values (another 
-way to prime it is `coro.send(None)`).
+So why bother with `next(coro)` at all, and not `coro.send(10)` straight away?
+
+A coroutine can only accept values when it is *suspended*. `next(coro)` 
+*primes* the coroutine and puts it in a suspended state meaning it is ready to
+start receiving values (another way to prime it is `coro.send(None)`).
 
 Once the coroutine is primed, `coro.send(10)` resumes the coroutine where it 
-was paused at `yield average`. Before, when `yield` was the only expression in
-the line, we just moved to the next line in the body of the function definition.
+was paused at `yield average`. Before, when `yield` was at the start of the 
+line, we just moved to the next line in the body of the function definition.
 
 Now, there is an assignment to take care of. What Python does is to take the value
 sent in, here `10`, and assign it to `term` (you can think of `10` as replacing
@@ -363,10 +347,10 @@ def coro():
     
 c = coro(c)
 next(c)  # 5
-next(c)  # fall off the function body (no more `yield`)
+next(c)  # fall off the end of the function body (no more `yield`)
 # Raise `StopIteration` exception just like before
 # However, 10 is available in the exception
-c = coro(c)
+c = coro(c)  # coroutine is exhausted it, make new instance of it
 while 1:
     try:
         next(c)  # 5
@@ -375,7 +359,8 @@ while 1:
         break
 ```
 
-We can now update our running average example to return a value 
+We can now update our running average example to return a value (we won't bother
+yielding the updated the average as we go along)
 
 ```python
 def averager2():
@@ -446,24 +431,27 @@ Let's suppose we have two functions, `func1` and `func2`.
 
 `func1` takes two seconds to run. `func2` takes three seconds to run, on condition
 that `func1` has finished running. If `func1` has not finished running, `func2`
-hangs and never finishes.
+cannot finish.
 
 The obvious solution is to call `func1` first and then `func2`, leading to a 
 total running time of five seconds.
 
-If we called `func2` first, our script would hang forever.
+If we called `func2` first, `func1` would never finish and our script would 
+hang forever.
 
-However, with concurrency, we could start `func1` and immediately after
-start `func2`.
+However, with concurrency, execution of both `func1` and `func2` can make 
+progress at the same time.
+
+With concurrency enabled, we could start `func1` and immediately after start  
+`func2`.
  
 `func1` would finish first after two seconds. About one second later, `func2` would
-also be finished (it has been running for three seconds and `func1` has finished
-running). This gives us a total running time of about three seconds.
+also finish (it has been running for three seconds and `func1` has finished
+running). This gives a total running time of about three seconds.
 
 We could achieve the above by running `func1` and `func2` in separate threads.
 
-However, below we will achieve the same result in a single thread using a simpler 
-method based on coroutines.
+Alternatively, we could use a single thread and coroutines:
 
 ```python
 import time
@@ -524,3 +512,19 @@ coroutine2 status: Running...
 coroutine2 status: Done
 Event loop finished in 3.02s
 ```
+
+<br>
+<br>
+
+---
+
+<br>
+<br>
+
+{% include disclaimer.md %}
+
+## References
+
+- [Fluent Python, 1st Edition - Luciano Ramalho](http://shop.oreilly.com/product/9780596528126.do)
+- [Learning Python, 5th Edition - Mark Lutz](http://shop.oreilly.com/product/0636920028154.do)
+- [Tall, Snarky Canadian](https://snarky.ca/how-the-heck-does-async-await-work-in-python-3-5/)
