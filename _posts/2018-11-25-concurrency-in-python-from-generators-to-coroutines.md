@@ -513,6 +513,10 @@ coroutine2 status: Done
 Event loop finished in 3.02s
 ```
 
+This is just the start of the concurrency story in Python using coroutines.
+In the [next post](/2018/12/16/concurrency-in-python-from-coroutines-to-asynchronous-programming-part-1.html), we will develop the ideas seen in the above code snippet 
+and in this section further.
+
 <br>
 <br>
 
