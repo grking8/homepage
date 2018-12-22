@@ -176,8 +176,10 @@ print(results)  # [1]
 
 ### More realistic, simpler concurrency example
 
+#### Concurrency in the real world
+
 We introduced concurrency in the previous post where it was defined as 
-"to make progress on multiple tasks at the same time".
+"making progress on multiple tasks at the same time".
 
 We saw it applied to a particular situation and reduce the running time of a 
 script.
@@ -185,27 +187,26 @@ script.
 More generally though, why do we care about concurrency when programming in Python?
 
 In Python (and other languages), functions that perform I/O (moving data from 
-A to B) can take a long time to run and introduce latency.
+A to B) can take a long time to run, introducing latency.
 
 Data might be moved across a network, e.g. when making a HTTP request, from an external 
 hard drive to local disk, from a local database to the local file system, etc.
 
 In Python, programs are by default run **synchronously**, i.e. lines of code are executed
 in order, one after the other. If there are two lines of code, the second line of code can
-only be run once the first line has completed.
+only run once the first line is completed.
 
-If the first line performs I/O, this blocks the running of the entire program. 
-Only once the first line's I/O has completed can the program continue and 
+If the first line performs I/O, it blocks the running of the entire program. 
+Only once the first line's I/O is completed can the program continue and 
 run the second line.
 
 This is wasteful as each time the program waits for I/O to complete, the CPU is sitting
 idle.
 
-This wastefulness can be seen in the running time of the program increasing linearly with
-the number of I/O operations performed, i.e. it is $O(n)$.
+It is also time consuming with the running time of the program increasing linearly with
+the number of I/O operations performed, i.e. its time complexity is $O(n)$.
 
-For example, a program performing $n$ I/O operations each taking two seconds has
-the following running times:
+For example, for a program performing $n$ I/O operations each taking two seconds:
 
 | I/O operations | Running time |
 |:------:|:-----------:|
@@ -217,14 +218,13 @@ the following running times:
 
 <br>
 
-To put this into perspective, there are billions of webpages. Google crawls all these 
-pages regularly and seems to update its search results every couple of days or so.
+To put this into perspective, there are about 50 billion webpages which Google crawl 
+regularly. Given the speed at which Google seach results update, one suspects Google is 
+not doing this synchronously!
 
-One suspects Google is not doing this synchronously!
+One solution is to use concurrency to write programs that run **asynchronously.**
 
-The solution is to use concurrency to write programs that run **asynchronously.**
-
-Now, when our program encounters a line of code that performs I/O, this line does not 
+Now, when our program encounters a line of code that performs I/O, it does not 
 block the rest of the program (this is why asynchronous is synonymous with non 
 blocking). Instead, the next line of the program is run.
 
@@ -233,24 +233,94 @@ e.g. how do I know when the I/O performed by the first line has completed, and h
 process the result? What if there was an error during that I/O?
 
 The advantage is that the program in our previous example now takes two seconds to run, 
-rather than $2n$. This means our program's running time is scaleable, as it is 
-completely independent of the number of I/O operations.
+rather than $2n$ seconds. This means our program's running time is scaleable, as it is 
+completely independent of $n$, the number of I/O operations.
 
-This was because we assumed each I/O operation took two seconds to run. In general,
-each I/O operation will vary in the amount of time it takes to run, and the program's
-running time is $\max(r_1,\ldots,r_n)$. Although this is not completely independent of 
-$n$, the dependence is fairly benign in that as n increases we are taking the max of 
-a larger set of numbers, but if we assume there is some upper bound on the time of 
-an I/O operation, this is not a problem.
+Why two seconds? Because for a program with $n$ asynchronous I/O operations with running 
+times $(r_1,\ldots,r_n)$, the total running time is $\max(r_1,\ldots,r_n)$. And because we assumed each I/O operation take two seconds, 
 
-In any case, it is much better than the linear situation we had earlier.
+$$
+\max(r_1,\ldots,r_n) = \max(2,\ldots,2) = 2
+$$
 
-That all sounds great, what's that got to do with yield from?
+In reality, I/O operations are unpredictable, e.g. whilst the majority might take two 
+seconds to complete, a few might take 10 seconds, and some might just hang.
 
-We want to 
-- flag our parts of the code that introduce latency
-- make those parts of the code non blocking and run concurrently
+This is why, in reality, you have timeouts on each I/O operation. This ensures the 
+running time of your program never exceeds the timeout.
 
+#### Concurrency and `yield from`
+
+Implementing concurrency with `yield from` means I/O code you wish to run concurrently 
+**is isolated in self-contained units.** This is beneficial as such code is often 
+complicated, involving low level interaction with the OS. This isolation takes place 
+by *placing I/O code into coroutines.*
+
+These coroutines are then called by **other coroutines written in the same way 
+as normal, synchronous code.**
+
+For example,
+
+```python
+def io_coroutine1():
+    # difficult, low-level I/O stuff
+    return result
+
+def io_coroutine2(x):
+    # difficult, low-level I/O stuff
+    return result
+
+def easy_coroutine():
+    # normal, synchronous Python
+    result1 = yield from io_coroutine1()
+    result2 = yield from io_coroutine2(result1)
+    return result2
+```
+
+Ok, `easy_coroutine()` doesn't quite look like normal, synchronous Python. But if 
+we remove `yield from`, we are left with
+
+```python
+def easy_coroutine():
+    result1 = io_coroutine1()
+    result2 = io_coroutine2(result1)
+    return result2
+```
+
+And here comes the punch line. Although the code in `easy_coroutine()` is basically normal
+Python (apart from `yield from`), the I/O work done in `io_coroutine1()` and 
+`io_coroutine2()` is **non blocking,** e.g. if we had `easy_coroutine1()` and 
+`easy_coroutine2()`, with I/O going on in both, the two could be run concurrently with
+progress made in both at the same time.
+
+Moreover, in reality, the difficult I/O stuff going on in `io_coroutine1()` and 
+`io_coroutine2()` either comes from the `asyncio` standard library or a third party 
+library, e.g. [`trio`,](https://trio.readthedocs.io/en/latest/) [`aiohttp`.](https://aiohttp.readthedocs.io/en/stable/)
+
+However, if this all sounds a little too good to be true, it is!
+
+There is one missing piece to the jigsaw, which is that coroutines like 
+`easy_coroutine1()` and `easy_coroutine2()` **have to be run in an event loop.**
+
+But this 
+is, again, something you will never write yourself in production code. Rather, it will be 
+provided by an asynchronous event programming framework like `asyncio` or `trio`.
+
+For learning purposes though, let's imagine the rough outline of a homemade 
+implementation:
+
+- Put all I/O code into coroutines, "I/O coroutines".
+- Implement rest of the program in "easy coroutines" (some making calls to "I/O 
+coroutines") which apart from `yield from` are written like regular, 
+synchronous Python functions
+- Run the "easy coroutines" in an event loop.
+
+Let's flesh out some of the details of the above in an example.
+
+In our example, we have one "I/O coroutine", `network_io_coroutine()`, and one "easy coroutine", `coroutine()`, which calls `network_io_coroutine()` to get a network response.
+
+The aim of our example is to make two network I/O operations concurrently by using a 
+basic event loop, displaying the results at the end:
 
 ```python
 import time
@@ -319,9 +389,15 @@ Coroutine results {'coro1': 200, 'coro2': 200}
 Script took 3.00s
 ```
 
-And to prove this works, if we add a third coroutine, the running time will be the same.
+We can see that although each network I/O operation takes three seconds, the script's 
+total running time is also three seconds.
 
-The code is the same except now `main` looks like
+As mentioned earlier, this running time is independent of the number of I/O operations.
+
+To check this holds, let's run the same script, only this time with three I/O operations
+instead of two.
+
+The only code changes required are in `main()`
 
 ```python
 def main():
@@ -362,9 +438,18 @@ Coroutine results {'coro1': 200, 'coro2': 200, 'coro3': 200}
 Script took 3.00s
 ```
 
-In part 2, we will look at how the above is incorporated in `asyncio`. As although it 
-works, there is no need to create your asynchronous event framework. As the above is sort
-of the beginning of an async framework.
+which works as expected.
+
+In conclusion, we can see how `yield from` makes quite a big difference to the way we 
+write and organise our code when programming asynchronously in Python.
+
+Asynchronous programming in Python is usually implemented via a 
+framework such as `asyncio`. However, in this post we saw how such an implementation
+might look without a framework.
+
+In the next post, we will take a more realistic approach, and 
+see fully fledged, genuine examples of asynchronous programming 
+in Python with the `asyncio` framework.
 
 <br>
 <br>
