@@ -14,13 +14,13 @@ threaded concurrency.
 After reading that post, you might be asking 
 
 - Retrieving the value returned by a coroutine by catching a `StopIteration` exception
- and accessing its `value` attribute seems a bit hacky, is there a cleaner way?
+ and accessing the `value` attribute seems a bit hacky, is there a cleaner way?
 - Whilst the example at the end worked, it was
     - Pretty contrived and unrealistic as use cases go
     - Quite verbose / complicated for a simple task
 
-In this post, we will introduce `yield from` which will allow us to go some way to 
-address the points above.
+In this post, we will introduce `yield from` which will go some way in  
+addressing the points above.
 
 ## yield from
 
@@ -29,7 +29,7 @@ First, let's see how the `yield from` syntax works.
 Like `yield`, `yield from` is only valid inside the definition of a function body and 
 turns a function into a generator / coroutine.
 
-Unlike `yield`, `yield from` must be followed by an iterable.
+Unlike `yield`, `yield from` *must be followed by an iterable.*
 
 `yield from` converts the iterable into an iterator and exhausts it, yielding each value
 along the way, e.g.
@@ -47,8 +47,8 @@ which is equivalent to
 
 ```python
 def coroutine(iterable):
-    for x in iterable:
-        yield x
+    for item in iterable:
+        yield item
 
 coro = coroutine('hello')
 next(coro)  # 'h'
@@ -59,7 +59,7 @@ As `yield from` can be followed by any iterable, it can be followed by a generat
 (recall generators are iterables and iterators).
 
 ```python
-def coroutine(generator):
+def coroutine(generator):  # `generator` is a generator function
     yield from generator()
         
 def generator():
@@ -71,8 +71,8 @@ next(coro)  # 'h'
 next(coro)  # 'e'
 ```
 
-The above means coroutines can call other coroutines in the same way a function
-can call other functions, i.e the above is analogous to 
+The above means coroutines can call other generators / coroutines in the same 
+way a function can call other functions, i.e the above is analogous to 
 
 ```python
 def func1():
@@ -119,12 +119,15 @@ next(g)  # 'h'
 next(g)  # 'e'
 ```
 
-Each time we add an intermediary generator, we have to wrap another `next()` call,
-so for *n* generators we'd have `next(next(...))` *n* times. Whereas with `yield from`,
+Each time we add an intermediary generator, we have to make an extra `next()` call.
+
+For $n$ generators, we'd have `next(next(...))` $n$ times.
+
+However, with `yield from`:
 
 ```python
-def coroutine1(coroutine2):
-    yield from coroutine2()
+def coroutine1(coroutine):
+    yield from coroutine()
     
 def coroutine2():
     yield from generator()
@@ -142,7 +145,7 @@ the same code works regardless of the number of coroutines separating the outer 
 most objects.
 
 This might seem like a trivial saving, but according to [PEP 380,](https://www.python.org/dev/peps/pep-0380/) 
-it can amount to something substantial.
+it often amounts to something substantial.
 
 Now that we have seen how `yield from` works, let's see how it addresses the points raised
 at the beginning of the post.
@@ -173,42 +176,36 @@ print(results)  # [1]
 
 ### More realistic, simpler concurrency example
 
-We introduced concurrency in the previous post and saw it means making
-progress on multiple tasks at the same time.
+We introduced concurrency in the previous post where it was defined as 
+"to make progress on multiple tasks at the same time".
 
-We saw how it could be applied to a particular situation to reduce the running time of a 
-program.
+We saw it applied to a particular situation and reduce the running time of a 
+script.
 
 More generally though, why do we care about concurrency when programming in Python?
 
-In Python (and other languages in general), functions that perform I/O (moving data from 
-A to B) can take a long time to run.
+In Python (and other languages), functions that perform I/O (moving data from 
+A to B) can take a long time to run and introduce latency.
 
 Data might be moved across a network, e.g. when making a HTTP request, from an external 
 hard drive to local disk, from a local database to the local file system, etc.
 
-All these operations introduce latency, which is why functions performing I/O can take a
-while to run.
-
 In Python, programs are by default run **synchronously**, i.e. lines of code are executed
-in order, one after the other. If we have two lines of code, the second line of code can
-only run once the first line has completed.
+in order, one after the other. If there are two lines of code, the second line of code can
+only be run once the first line has completed.
 
-If the first line of code performs I/O, this blocks the running of the entire program. 
-Only once the first line's I/O has completed can the program continue and the second line 
-of code be run.
+If the first line performs I/O, this blocks the running of the entire program. 
+Only once the first line's I/O has completed can the program continue and 
+run the second line.
 
 This is wasteful as each time the program waits for I/O to complete, the CPU is sitting
 idle.
 
-This wastefulness translates into the running time of the program increasing linearly with
-the number of I/O operations performed.
+This wastefulness can be seen in the running time of the program increasing linearly with
+the number of I/O operations performed, i.e. it is $O(n)$.
 
-For example, say a program performs $n$ I/O operations each taking two seconds. This gives
-a total running time of $2n$ seconds because each operation can only start once the 
-previous has finished.
-
-<br>
+For example, a program performing $n$ I/O operations each taking two seconds has
+the following running times:
 
 | I/O operations | Running time |
 |:------:|:-----------:|
@@ -221,7 +218,7 @@ previous has finished.
 <br>
 
 To put this into perspective, there are billions of webpages. Google crawls all these 
-pages regularly and manages to update its search results every couple of days.
+pages regularly and seems to update its search results every couple of days or so.
 
 One suspects Google is not doing this synchronously!
 
