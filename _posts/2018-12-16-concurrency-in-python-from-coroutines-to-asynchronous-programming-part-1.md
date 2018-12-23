@@ -19,8 +19,8 @@ After reading that post, you might be asking
     - Pretty contrived and unrealistic as use cases go
     - Quite verbose / complicated for a simple task
 
-In this post, we will introduce `yield from` which will go some way in  
-addressing the points above.
+In this post, we will introduce `yield from` which will go some way in addressing the 
+points above.
 
 ## yield from
 
@@ -49,14 +49,10 @@ which is equivalent to
 def coroutine(iterable):
     for item in iterable:
         yield item
-
-coro = coroutine('hello')
-next(coro)  # 'h'
-next(coro)  # 'e'
 ```
 
 As `yield from` can be followed by any iterable, it can be followed by a generator 
-(recall generators are iterables and iterators).
+(recall generators are both iterables and iterators).
 
 ```python
 def coroutine(generator):  # `generator` is a generator function
@@ -119,7 +115,7 @@ next(g)  # 'h'
 next(g)  # 'e'
 ```
 
-Each time we add an intermediary generator, we have to make an extra `next()` call.
+Each time we add an intermediary generator, we have to make an extra call to `next()`.
 
 For $n$ generators, we'd have `next(next(...))` $n$ times.
 
@@ -201,7 +197,7 @@ Only once the first line's I/O is completed can the program continue and
 run the second line.
 
 This is wasteful as each time the program waits for I/O to complete, the CPU is sitting
-idle.
+idle (in terms of what it is doing for your program).
 
 It is also time consuming with the running time of the program increasing linearly with
 the number of I/O operations performed, i.e. its time complexity is $O(n)$.
@@ -222,7 +218,7 @@ To put this into perspective, there are about 50 billion webpages which Google c
 regularly. Given the speed at which Google seach results update, one suspects Google is 
 not doing this synchronously!
 
-One solution is to use concurrency to write programs that run **asynchronously.**
+One solution is to use concurrency expressed via **asynchronous programming.**
 
 Now, when our program encounters a line of code that performs I/O, it does not 
 block the rest of the program (this is why asynchronous is synonymous with non 
@@ -234,7 +230,7 @@ process the result? What if there was an error during that I/O?
 
 The advantage is that the program in our previous example now takes two seconds to run, 
 rather than $2n$ seconds. This means our program's running time is scaleable, as it is 
-completely independent of $n$, the number of I/O operations.
+completely independent of $n$, the number of I/O operations, i.e. it is $O(1)$.
 
 Why two seconds? Because for a program with $n$ asynchronous I/O operations with running 
 times $(r_1,\ldots,r_n)$, the total running time is $\max(r_1,\ldots,r_n)$. And because we assumed each I/O operation take two seconds, 
@@ -287,31 +283,37 @@ def easy_coroutine():
     return result2
 ```
 
-And here comes the punch line. Although the code in `easy_coroutine()` is basically normal
-Python (apart from `yield from`), the I/O work done in `io_coroutine1()` and 
-`io_coroutine2()` is **non blocking,** e.g. if we had `easy_coroutine1()` and 
-`easy_coroutine2()`, with I/O going on in both, the two could be run concurrently with
-progress made in both at the same time.
+which does.
 
-Moreover, in reality, the difficult I/O stuff going on in `io_coroutine1()` and 
+And here comes the punch line:
+
+**Although the code in `easy_coroutine()` is basically normal**
+**Python (apart from `yield from`), the I/O in `io_coroutine1()` and**
+**`io_coroutine2()` is non blocking.**
+
+For example, if we had `easy_coroutine1()` and 
+`easy_coroutine2()`, with I/O going on in both, progress in both coroutines could be
+made at the same time.
+
+Further, in reality, the difficult I/O stuff going on in `io_coroutine1()` and 
 `io_coroutine2()` either comes from the `asyncio` standard library or a third party 
 library, e.g. [`trio`,](https://trio.readthedocs.io/en/latest/) [`aiohttp`.](https://aiohttp.readthedocs.io/en/stable/)
 
 However, if this all sounds a little too good to be true, it is!
 
-There is one missing piece to the jigsaw, which is that coroutines like 
-`easy_coroutine1()` and `easy_coroutine2()` **have to be run in an event loop.**
+There is one missing piece to the jigsaw, which is that **coroutines like** 
+**`easy_coroutine1()` and `easy_coroutine2()` have to be run in an event loop.**
 
-But this 
-is, again, something you will never write yourself in production code. Rather, it will be 
-provided by an asynchronous event programming framework like `asyncio` or `trio`.
+But this, again, is something you will never write yourself in production code. Rather, 
+it will be provided by an asynchronous event programming framework like `asyncio` or 
+`trio`.
 
 For learning purposes though, let's imagine the rough outline of a homemade 
 implementation:
 
 - Put all I/O code into coroutines, "I/O coroutines".
 - Implement rest of the program in "easy coroutines" (some making calls to "I/O 
-coroutines") which apart from `yield from` are written like regular, 
+coroutines") which, apart from `yield from`, are written like regular, 
 synchronous Python functions
 - Run the "easy coroutines" in an event loop.
 
@@ -319,7 +321,7 @@ Let's flesh out some of the details of the above in an example.
 
 In our example, we have one "I/O coroutine", `network_io_coroutine()`, and one "easy coroutine", `coroutine()`, which calls `network_io_coroutine()` to get a network response.
 
-The aim of our example is to make two network I/O operations concurrently by using a 
+Our example will make two fake network I/O operations concurrently. It will use a 
 basic event loop, displaying the results at the end:
 
 ```python
@@ -349,8 +351,10 @@ def network_io_coroutine():
     return get_network_io_response()
 
 def coroutine():
+    # our "easy" coroutine
     # 1st line is blocking BUT DOES NOT BLOCK EVENT LOOP
     # 1st line unblocks when `network_io_coroutine` returns
+    # This blocking then unblocking makes the code easy to write
     response = yield from network_io_coroutine()
     network_io_responses.append(response)
 
@@ -440,14 +444,19 @@ Script took 3.00s
 
 which works as expected.
 
-In conclusion, we can see how `yield from` makes quite a big difference to the way we 
-write and organise our code when programming asynchronously in Python.
+
+## Conclusion
+
+We can see how `yield from` makes quite a big difference to the way we 
+write and organise our code when programming asynchronously in Python. By programming
+asynchronously, we achieve concurrency which leads to performance benefits when doing
+I/O operations.
 
 Asynchronous programming in Python is usually implemented via a 
 framework such as `asyncio`. However, in this post we saw how such an implementation
 might look without a framework.
 
-In the next post, we will take a more realistic approach, and 
+In the [next post,](/2018/12/23/concurrency-in-python-from-coroutines-to-asynchronous-programming-part-2.html) we will take a more realistic approach, and 
 see fully fledged, genuine examples of asynchronous programming 
 in Python with the `asyncio` framework.
 
