@@ -24,7 +24,7 @@ theme: minima
 exclude:
   - Gemfile
   - Gemfile.lock
-  - [vendor]
+  - vendor
 url: "https://guyrking.com"
 plugins:
   - jemoji
