@@ -4,6 +4,7 @@ title: Archive
 permalink: /archive/
 order: 2
 years:
+- 2019
 - 2018
 - 2017
 - 2016
