@@ -8,8 +8,7 @@ comments: true
 {% include post-image.html name="2416585_0.jpg" width="100" height="100" 
 alt="python logo" %}
 
-In the [previous post,](/2018/11/25/concurrency-in-python-from-generators-to-coroutines.html) we saw how coroutines in Python can be used to achieve single
-threaded concurrency. 
+In the [previous post,](/2018/11/25/concurrency-in-python-from-generators-to-coroutines.html) we saw how coroutines in Python can be used to achieve single threaded concurrency. 
 
 After reading that post, you might be asking 
 
@@ -175,7 +174,7 @@ print(results)  # [1]
 #### Concurrency in the real world
 
 We introduced concurrency in the previous post where it was defined as 
-"making progress on multiple tasks at the same time".
+"making progress on multiple tasks in the same time period".
 
 We saw it applied to a particular situation and reduce the running time of a 
 script.
@@ -192,15 +191,13 @@ In Python, programs are by default run **synchronously**, i.e. lines of code are
 in order, one after the other. If there are two lines of code, the second line of code can
 only run once the first line is completed.
 
-If the first line performs I/O, it blocks the running of the entire program. 
-Only once the first line's I/O is completed can the program continue and 
-run the second line.
+So if the first line performs I/O, the second line can only run once the I/O is completed.
 
 This is wasteful as each time the program waits for I/O to complete, the CPU is sitting
-idle (in terms of what it is doing for your program).
+idle (in terms of your program).
 
-It is also time consuming with the running time of the program increasing linearly with
-the number of I/O operations performed, i.e. its time complexity is $O(n)$.
+It is also time consuming; the running time of the program increases linearly with the 
+number of I/O operations performed, i.e. its time complexity is $O(n)$.
 
 For example, for a program performing $n$ I/O operations each taking two seconds:
 
@@ -293,7 +290,7 @@ And here comes the punch line:
 
 For example, if we had `easy_coroutine1()` and 
 `easy_coroutine2()`, with I/O going on in both, progress in both coroutines could be
-made at the same time.
+made in the same time period.
 
 Further, in reality, the difficult I/O stuff going on in `io_coroutine1()` and 
 `io_coroutine2()` either comes from the `asyncio` standard library or a third party 
