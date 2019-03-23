@@ -18,7 +18,7 @@ order: 3
 
 - ### homepage
     
-    **Personal homepage and blog using static website template**
+    **Personal homepage and blog using static website template^^**
     
     _Jekyll, CircleCI, Docker, GCP Container Registry, GCP Compute Engine, Let's Encrypt_
 
@@ -38,4 +38,15 @@ order: 3
     
 ## Contributor
 
-[pytube](https://github.com/nficano/pytube)
+- [pytube](https://github.com/nficano/pytube)
+
+## For Profit
+
+- ### zorn capital
+
+    **Early-stage quantitative FX hedge fund**
+    
+    _Python, pandas, scipy, MySQL, AWS EC2, GitLab CI/CD, Docker, GCP,
+    Let's Encrypt_
+    
+    [website](https://zorncapital.com)
