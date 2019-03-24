@@ -39,6 +39,14 @@ order: 3
 ## Contributor
 
 - [pytube](https://github.com/nficano/pytube)
+    - Handle age restricted and live videos
+    - Extract video metadata
+
+<br />
+
+***
+
+<br />
 
 ## For Profit
 
