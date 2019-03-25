@@ -20,6 +20,11 @@ minima:
 
 # Build settings
 markdown: kramdown
+kramdown:
+  highlighter: coderay
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
 theme: minima
 exclude:
   - Gemfile
