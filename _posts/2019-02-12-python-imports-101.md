@@ -14,10 +14,10 @@ languages.
 However, certain aspects can seem a bit mysterious and have a tendency to 
 frustrate those lacking experience:
 
-- Multitude of libraries imported (standard library, third-party, preinstalled vs 
+- Multitude of files imported (standard library, third-party, preinstalled vs 
 user installed, user created)
-- Multitude of import methods (file imports, package imports, 
-absolute package imports, relative package imports)
+- Multitude of import methods (file vs. package imports, 
+absolute package imports vs. relative package imports)
 - Multiple interpreters (preinstalled vs user installed, different 
 versions, e.g. Python 2.7 vs Python 3.6)
 - Installation of third-party libraries (different package managers 
@@ -27,7 +27,7 @@ and cloud repositories)
 
 Further, these aspects can vary across platforms 
 (Linux, macOS, Windows,...) and sometimes even experienced 
-developers coming to Python from another language can find themselves in
+developers coming to Python from other languages can find themselves in
 sticky situations, e.g. "I think I did something 
 to my system Python" or are left scratching their heads.
 
@@ -46,31 +46,28 @@ as without an interpreter we won't be importing anything!
 
 On Linux / macOS, usually at least one Python interpreter comes preinstalled.
 
-In reality, any preinstalled Python interpreter should not be used.
+In reality, any preinstalled Python interpreter should not be used 
+for development work.
 
-However, in this post we will use them to 
-avoid installing and using your own 
+However, in this post we will do so to 
+avoid the extra step of installing and using our own 
 interpreter in a virtual envrionment.
 
-On a clean Ubuntu OS, there is a Python 2 interpreter
+On a clean Ubuntu OS, there is a Python 2 interpreter, e.g.
 
-```bash
-/usr/bin/python2.7
-```
+`/usr/bin/python2.7`
 
-and a Python 3 interpreter preinstalled (from hereon examples will 
-refer to Python 3) 
+and a Python 3 interpreter, e.g.
 
-```bash
-/usr/bin/python3.5
-```
+`/usr/bin/python3.5`
 
-as well as Python libraries:
+preinstalled (from hereon examples will 
+refer to Python 3) as well as Python libraries:
 
 - Standard library in `/usr/lib/python3.5`
 - Third-party libraries in `/usr/lib/python3/dist-packages`
 
-But your mileage may vary, e.g. you might have only files and
+but your mileage may vary, e.g. you might have only files and
 directories from the standard library preinstalled or only one 
 interpreter.
 
@@ -81,54 +78,49 @@ In your
 standard library directory, you should see files like `random.py` that
 are part of the standard library.
 
-Regardless, at a minimum you should have an interpreter and 
+At a minimum, you should have an interpreter and 
 the standard library preinstalled.
 
 ## Out-of-the-box imports
 
 If you write in a Python script or Python shell
-
-```python
-import random
-```
-
-or (assuming you have a `requests` directory in 
+(assuming you have a `requests` directory in 
 `/usr/lib/python3/dist-packages`)
 
 ```python
+import random
 import requests
-```
 
-it just works - you have successfully imported a library, and can do things like
-
-```python
 requests.get('http://bbc.co.uk')
 random.randint(0,10)
 ```
+just works - you have successfully imported and used two 
+libraries.
 
 A couple of points:
 
 - The imported library might be a file, e.g. `random.py` or a 
 directory, e.g. `requests`.
-- The `import` statements make no reference to any directory paths, how does
+- The `import` statements make no reference to any directory paths; how does
 Python know where to find the relevant files?
 
 The answer is the **Module Search Path (MSP).** 
 
-The MSP is set at the start of each script / each time you start a Python 
-shell.
+The MSP is a variable set at the start of each script / 
+Python shell session.
 
 The MSP is a list of directory paths. 
 
 If you write `import johnny-cache`, 
-Python will take the first directory path in the MSP and see if it can find
-a file or directory called `johnny-cache` in that directory. 
+Python will take the first directory path in the MSP and see if 
+there is a file or directory called `johnny-cache` in that 
+directory. 
 
 If it can, it 
 will do the import. If not, it will move on to the second directory path
 in the list, and so on.
 
-What directory paths are in the MSP? Typically, the list looks something like
+What directory paths are in the MSP? Typically, something like:
 
 - "Home" - if you are running a script, this is the directory of
 the script; if you are in a Python shell, it is the current
@@ -141,10 +133,8 @@ working directory
 To see the MSP for yourself,
 
 ```bash
-/usr/bin/python3.5 -m site
+/usr/bin/python3.5 -m site  # run from /home/jim
 ```
-
-which outputs, if run from `/home/jim`
 
 ```python
 sys.path = [
@@ -155,7 +145,7 @@ sys.path = [
 ]
 ```
 
-(and maybe some other paths too, but these are the ones of most 
+(there maybe other paths too, but above are those of most 
 interest).
 
 The MSP is important. If it is empty, you won't be able to
@@ -186,7 +176,7 @@ import_examples/
         └── c.py
 ```
 
-where the files are
+with files
 
 ```python
 # a.py
@@ -209,39 +199,22 @@ In the shell,
 
 ```bash
 cd /path/to/import_examples
-/usr/bin/python3.5 dir0/a.py
-```
-
-displays
-
-```
-hello
+/usr/bin/python3.5 dir0/a.py  # hello
 ```
 
 In `a.py`,
 
-```python
-import b
-```
+`import b` 
 
-is successful as the first path in the MSP is "home", i.e. the 
-directory containing `a.py`
+is successful as the first path in the MSP is "home", the 
+directory containing `a.py`, i.e.
 
-```bash
-/path/to/import_examples/dir0
-```
+`/path/to/import_examples/dir0`
 
-Thus when the interpreter runs
+Thus when the interpreter runs`import b`
+the first file it looks for is
 
-```python
-import b
-```
-
-the first thing it does is check for a file
-
-```bash
-/path/to/import_examples/dir0/b.py
-```
+`/path/to/import_examples/dir0/b.py`
 
 which exists so its contents are imported! The interpreter then
 moves on to running the next line in `a.py`.
@@ -269,18 +242,13 @@ ImportError: No module named 'c'
 ```
 
 When `import c` is run, the interpreter goes through the MSP as
-before. It first looks for a file
-
-```
-/path/to/import_examples/dir0/c.py
-```
+before. It first looks for a file `/path/to/import_examples/dir0/c.py`.
 
 Because no such file exists, it tries the next path in the MSP, and 
 looks for
 
-```
-/usr/lib/python3.5/c.py
-```
+`/usr/lib/python3.5/c.py`
+
 
 which also does not exist. It continues through the MSP, looking for
 
