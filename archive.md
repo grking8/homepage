@@ -1,6 +1,7 @@
 ---
 layout: page
-title: Archive
+title: ARCHIVE
+page_title: Archive
 permalink: /archive/
 order: 2
 years:

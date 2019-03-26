@@ -1,8 +1,10 @@
 PATH
   remote: .
   specs:
-    minima (2.1.1)
-      jekyll (~> 3.3)
+    minima (2.5.0)
+      jekyll (~> 3.5)
+      jekyll-feed (~> 0.9)
+      jekyll-seo-tag (~> 2.1)
 
 GEM
   remote: https://rubygems.org/
@@ -46,6 +48,8 @@ GEM
       jekyll (~> 3.3)
     jekyll-sass-converter (1.5.2)
       sass (~> 3.4)
+    jekyll-seo-tag (2.6.0)
+      jekyll (~> 3.3)
     jekyll-sitemap (1.2.0)
       jekyll (~> 3.3)
     jekyll-watch (2.1.2)
@@ -87,8 +91,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 1.12)
+  bundler
   jekyll-feed
+  jekyll-seo-tag
   jekyll-sitemap
   jemoji (= 0.10.2)
   minima!

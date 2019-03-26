@@ -2,7 +2,7 @@ title: Guy King
 author: Guy King
 email: grking8@gmail.com
 description: > # this means to ignore newlines until "github_username:"
-  Hello!
+  Personal homepage and blog of Guy King
 
 github_username:  grking8
 facebook_username: dairy.myriad
@@ -15,11 +15,12 @@ minima:
 
   # generate social links in footer
   social_links:
-    twitter: jekyllrb
-    github:  jekyll
+    # twitter: jekyllrb
     rss: rss
     # dribbble: jekyll
-    # facebook: jekyll
+    facebook: dairy.myriad
+    github:  grking8
+
     # flickr:   jekyll
     # instagram: jekyll
     # linkedin: jekyll
@@ -45,7 +46,6 @@ minima:
 
 # Build settings
 theme: minima
-<<<<<<< HEAD
 exclude:
   - Gemfile
   - Gemfile.lock
