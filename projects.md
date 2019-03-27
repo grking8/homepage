@@ -1,7 +1,7 @@
 ---
 layout: page
-title: PROJECTS
-page_title: Projects
+title: Projects
+page_title: PROJECTS
 permalink: /projects/
 order: 3
 ---
