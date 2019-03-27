@@ -3,31 +3,33 @@ layout: default
 ---
 
 <div class="home">
-  {{ content }}
-  <div class="footer-col-wrapper">
-    <div class="footer-col footer-col-1">
-      {% for file in site.static_files %}
-        {% if file.path == site.headshot %}
-          {% include headshot.html image=file.path %}
-        {% endif %}
-      {% endfor %}
-    </div>
-    <div class="footer-col footer-col-2">
-      <p>{{ site.description | escape }}</p>
-      <p>I am a software developer from the UK, working primarily in web
-        and cloud computing.</p>
-        <p>My current employer is <a href="https://lambertlabs.com">Lambert Labs.</a></p>
-      <p>Main technologies:</p>
-      <ul>
-        <li>Python</a></li>
-        <li>Django</a></li>
-        <li>Google Cloud Platform</a></li>
-      </ul>
-      <p>More out about me:</p>
-      <ul>
-        <li><a href="{{ site.url }}/full-cv.pdf">CV</a></li>
-        <li><a href="/bio">Bio</a></li>
-      </ul>
-    </div>
-  </div>
+
+    
+    <main class="page-content" aria-label="Content">
+
+        <div class="wrapper">
+            {% for file in site.static_files %}
+                {% if file.path == site.headshot %}
+                    {% include headshot.html image=file.path %}
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="wrapper">
+            Hello!
+            I am a software developer from the UK, working primarily in web and cloud computing.
+            My current employer is <a href="https://lambertlabs.com">Lambert Labs.</a>
+            <br />
+            <br />
+            Main technologies:
+            <br />
+            <em>python (django, scrapy),
+            google cloud platform,
+            amazon web services</em>
+            <br />
+            <br />
+            More out about me:
+            <a href="{{ site.url }}/full-cv.pdf">CV</a>, <a href="/bio">Bio</a>, 
+            <a href="mailto:grking8@gmail.com">Email</a>
+        </div>
+    </main>
 </div>

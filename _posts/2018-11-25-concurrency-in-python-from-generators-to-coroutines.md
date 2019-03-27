@@ -255,8 +255,8 @@ So far, we have only seen values *pulled* from a generator using `next()`.
 One of the extra features we need to consider in order to better understand 
 coroutines is *pushing* values.
 
-The other main extra features are *closing the generator, getting the generator 
-to return a value, and exception handling.*
+The other main extra features are *closing the generator, getting the generator* 
+*to return a value,* and *exception handling.*
 
 Typically, whenever one or more of these extra features is present, we no longer
 refer to the object as a generator but as a coroutine. 
@@ -345,12 +345,12 @@ def coro():
     yield 5
     return 10
     
-c = coro(c)
+c = coro()
 next(c)  # 5
 next(c)  # fall off the end of the function body (no more `yield`)
 # Raise `StopIteration` exception just like before
-# However, 10 is available in the exception
-c = coro(c)  # coroutine is exhausted it, make new instance of it
+# However, the value returned 10 is available in the exception
+c = coro()  # coroutine is exhausted it, make new instance of it
 while 1:
     try:
         next(c)  # 5
@@ -423,7 +423,7 @@ threaded concurrency.
 
 NB: When running tasks on multiple threads, and those threads are on different 
 CPUs, this is parallelism. In Python, although multithreading is supported, 
-because of the Global Interpreter Lock (GIL), multithreading always happens on 
+because of the Global Interpreter Lock (GIL), multithreading (almost?) always happens on 
 one CPU, thus parallelism is not possible. Only concurrency is possible in 
 Python.
 
@@ -436,16 +436,15 @@ cannot finish.
 The obvious solution is to call `func1` first and then `func2`, leading to a 
 total running time of five seconds.
 
-If we called `func2` first, `func1` would never finish and our script would 
+If we called `func2` first, it would never finish and our script would 
 hang forever.
 
-However, with concurrency, execution of both `func1` and `func2` can make 
-progress at the same time.
+However, with concurrency, `func1` and `func2` can both make progress in the same time
+period.
 
-With concurrency enabled, we could start `func1` and immediately after start  
-`func2`.
+With concurrency, we could start `func2` and immediately after start `func1`.
  
-`func1` would finish first after two seconds. About one second later, `func2` would
+`func1` would finish first after about two seconds. About one second later, `func2` would
 also finish (it has been running for three seconds and `func1` has finished
 running). This gives a total running time of about three seconds.
 
@@ -456,12 +455,14 @@ Alternatively, we could use a single thread and coroutines:
 ```python
 import time
 
+# coroutine implementation of `func1`
 def coroutine1():
     start = time.time()
     while time.time() - start < 2:
         yield 'Running...'
     yield 'Done'
 
+# coroutine implementation of `func2`
 def coroutine2():
     start = time.time()
     coro1_done = False
@@ -494,6 +495,8 @@ def run_loop():
             if not coro1_done:
                 current_coro = 'coro1'
     print(f'Event loop finished in {time.time() - start:.2f}s')
+
+run_loop()
 ```
 
 ```

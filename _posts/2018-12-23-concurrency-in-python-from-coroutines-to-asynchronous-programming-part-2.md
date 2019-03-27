@@ -149,11 +149,11 @@ loop.create_task(coro1)
 loop.create_task(coro2)
 ```
 
-`create_task()` returns a `Task` object wrapping around the coroutine given to it as an 
+`create_task()` returns a `Task` object wrapped around the coroutine given to it as an 
 argument.
 
 However, more importantly for us, it gets the event loop to schedule the 
-coroutine given to it as an argument for exection.
+coroutine given to it as an argument for execution.
 
 **When using `run_until_complete()`, we give the event loop one coroutine which it runs**
 **until completion.**
