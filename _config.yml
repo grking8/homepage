@@ -2,7 +2,7 @@ title: Guy King
 author: Guy King
 email: grking8@gmail.com
 description: > # this means to ignore newlines until "github_username:"
-  Hello!
+  Personal homepage and blog
 
 github_username:  grking8
 facebook_username: dairy.myriad
@@ -13,13 +13,38 @@ headshot: /assets/images/headshot.jpeg
 minima:
   date_format: "%b %-d, %Y"
 
+  # generate social links in footer
+  social_links:
+    # twitter: jekyllrb
+    rss: rss
+    # dribbble: jekyll
+    facebook: dairy.myriad
+    github:  grking8
+
+    # flickr:   jekyll
+    # instagram: jekyll
+    # linkedin: jekyll
+    # pinterest: jekyll
+    # youtube: jekyll
+    # youtube_channel: UC8CXR0-3I70i1tfPg1PAE1g
+    # youtube_channel_name: CloudCannon
+    # telegram: jekyll
+    # googleplus: +jekyll
+    # microdotblog: jekyll
+
+    # Mastodon instances
+    # mastodon:
+    # - username: jekyll
+    #   instance: example.com
+    # - username: jekyll2
+    #   instance: example.com
+
 # If you want to link only specific pages in your header, uncomment
 # this and add the path to the pages in order as they should show up
 #header_pages:
-# - about.html
+# - about.md
 
 # Build settings
-markdown: kramdown
 theme: minima
 exclude:
   - Gemfile
@@ -30,6 +55,8 @@ plugins:
   - jemoji
   - jekyll-sitemap
   - jekyll-feed
+  - jekyll-seo-tag
 google_analytics: "UA-110244866-1"
 disqus:
   shortname: homepage-5
+
