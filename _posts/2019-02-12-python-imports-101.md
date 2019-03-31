@@ -199,10 +199,10 @@ If we do
 
 ```bash
 $ cd /path/to/import_examples
-$ /usr/bin/python3.5 dir0/a.py  # hello
+$ /usr/bin/python3.5 dir0/a.py  # prints "hello"
 ```
 
-We can see in `a.py`,
+In `a.py`,
 
 `import b` 
 
@@ -229,68 +229,66 @@ import b
 import c  # extra import
 
 print(b.x)
-print(c.y)
+print(c.y)  # extra print
 ```
 
 Then
 
 ```bash
-$ /usr/bin/python3.5 dir0/a.py
+$ /usr/bin/python3.5 dir0/a.py  # prints error below
 ``` 
-
-gives an error
 
 ```
 Traceback (most recent call last):
-  File "import_examples/dir0/a.py", line 2, in <module>
+  File "import_examples/dir0/a.py", line 3, in <module>
     import c
 ImportError: No module named 'c'
 ```
 
-Why? Because for `import c`, the interpreter goes through the MSP as
-before. It first looks for a file `/path/to/import_examples/dir0/c.py`.
-
-As no such file exists, it looks for the next path in the MSP
+because the interpreter first looks for a file 
+`/path/to/import_examples/dir0/c.py` which does not exist
+so it looks for the next path in the MSP
 
 `/usr/lib/python3.5/c.py`
 
-which also does not exist. Then
+which also does not exist, then
 
 `/usr/local/lib/python3.5/dist-packages/c.py`
 
+and
+
 `/usr/lib/python3/dist-packages/c.py`
 
-neither of which exist. Having gone through all the paths in the MSP, 
-the interpreter throws an `ImportError`.
+which also both do not exist. At this point, the interpreter has gone 
+through all the paths in the MSP without success so it throws
+an `ImportError`.
 
-To get around this, we could add the path of the directory containing 
-`c.py` 
+To get round this, we could add the path of the directory containing 
+`c.py`, i.e.
 
 `/path/to/import_examples/dir0/dir1`
 
-to `sys.path`
+to `sys.path` like so
 
  ```python
  # a.py
 import b
-
 import sys
 sys.path.append('/path/to/import_examples/dir0/dir1')
-
 import c
 ```
 
 or `PYTHONPATH`.
 
-However, it's easy to imagine how this could quickly get tedious. 
-A better way is to use package imports instead.
+However, both methods get quickly tedious. 
+A better way is to use **package imports.**
 
 ### Package imports
 
 Just as a file containing Python code is known as a module, a directory
 containing modules is known as a **package**.
 
-#### Absolute package imports
+#### a) Absolute package imports
 
 Let's add `__init__.py` to `dir1`
 
@@ -307,6 +305,7 @@ import_examples/
 and modify `a.py`
 
 ```python
+# a.py
 import b
 import dir1.c  # absolute package import
 
@@ -314,35 +313,48 @@ print(b.x)
 print(dir1.c.y)
 ```
 
-Now
+Now,
 
 ```bash
-$ /usr/bin/python3.5 dir0/a.py
-# hello
-# bye
+$ /usr/bin/python3.5 dir0/a.py  # prints "hello", "bye"
 ``` 
 
-works because Python has something called **absolute
-package imports** which start with `import` followed
-by dot notation, e.g.
+because Python allows something called **absolute
+package imports.**
 
-`import dir1.dir2.dir3.dir4.file5`
+An absolute package import follows `import` with dot notation, e.g.
+
+`import dir1.dir2.dir3.dir4.myfile`
+
 where
-`dir1`, `dir2`, `dir3`, `dir4` each contain an `__init__.py`
-file (this lets Python know the directory is a package).
 
-The interpreter processes an absolute package import the
-same way as before, replacing the dots with path separators, e.g. the first
-file
+`dir1`, `dir2`, `dir3`, `dir4`
 
-`import dir1.c`
+each contain `__init__.py` (this file lets Python know the directory
+it is in is a package).
 
-it goes through the paths in the MSP in the same way as before, 
-replacing the dots with path separators.
+The interpreter follows the same steps as before, only now it also deals
+with the dot notation - 
+it replaces the dots with operating system path separators,
+e.g. `/` for Linux.
 
-#### Relative package imports
+So, the first file the interpreter looks for is
 
-To see these in action, let's update our directory tree to
+`/path/to/import_examples/dir0`
+
+prepended to
+
+`dir1/c.py`
+
+i.e. 
+
+`/path/to/import_examples/dir0/dir1/c.py`
+
+which exists.
+
+#### b) Relative package imports
+
+Let's modify our directory tree
 
 ```
 import_examples/
@@ -356,7 +368,7 @@ import_examples/
             └── d.py
 ```
 
-with files
+with Python files
 
 ```python
 # a.py
@@ -364,7 +376,8 @@ import b
 import dir1.c  # absolute package import
 
 print(b.x)
-print(dir1.c.d.z)
+print(dir1.c.y)
+print(dir1.c.d.z)  # extra print
 ```
 
 ```python
@@ -375,7 +388,6 @@ x = 'hello'
 ```python
 # c.py
 y = 'bye'
-
 from .dir2 import d  # relative package import
 ```
 
@@ -387,57 +399,52 @@ print(f'c.y in d.py: {c.y}')
 z = 'ciao'
 ```
 
-The output from `/usr/bin/python3.5 dir0/a.py` is
+Now,
+
+```bash
+$ /usr/bin/python3.5 dir0/a.py  # prints below
+```
 
 ```
 c.y in d.py: bye
 hello
+bye
 ciao
 ```
 
-Great, but what is going on here?
+Great!
 
-**Relative package imports** are denoted by imports starting with 
-`from` followed by dot syntax and are relative to the file in which
-they appear, e.g. the line
+But how does this work?
 
-```python
-# c.py
-from .dir2 import d  # relative package import
-```
+The above makes use of **relative package imports** which are denoted by
 
-means
+`from`
+
+followed by dot syntax. They are relative to the file in which
+they appear, e.g.
+
+`from .dir2 import d` in `c.py` means
 
 > Go to a directory called `dir2` located in the same
 directory as `c.py`, then look in `dir2` for a file called `d.py`
 
-and similarly
+and
 
-```python
-# d.py
-from .. import c  # relative package import
-```
-
-means
+`from .. import c` in `d.py` means
 
 > Go to the parent directory of the directory in which `d.py` is 
 located, then look for a file called `c.py`
 
 In relative package imports, the MSP plays no role!
 
+#### c) Relative package imports - common errors
+
 Suppose in `d.py` we also wanted to import `b.py` using a relative 
-package import, i.e. adding
+package import
 
-```python
-# d.py
-from ... import b  # relative package import
-```
+`from ... import b `
 
-Uh-oh, this does not work
-
-```
-ValueError: attempted relative import beyond top-level package
-```
+`ValueError: attempted relative import beyond top-level package`
 
 as recall the only way Python knows a directory is a package is via 
 the presence of `__init__.py`.
