@@ -116,11 +116,11 @@ Python will take the first directory path in the MSP and see if
 there is a file or directory called `johnny-cache` in that 
 directory. 
 
-If it can, it 
-will do the import. If not, it will move on to the second directory path
-in the list, and so on.
+If it so, it 
+will do the import. If not, it will move on to the second path
+in the list, etc.
 
-What directory paths are in the MSP? Typically, something like:
+What paths are in the MSP?
 
 - "Home" - if you are running a script, this is the directory of
 the script; if you are in a Python shell, it is the current
@@ -130,26 +130,26 @@ working directory
 - Directory containing user installed third-party libraries
 - Directory containing preinstalled third-party libraries
 
-To see the MSP for yourself,
+To see for yourself,
 
 ```bash
-/usr/bin/python3.5 -m site  # run from /home/jim
+$ /usr/bin/python3.5 -m site  # working directory /home/jim
 ```
 
 ```python
 sys.path = [
-    '/home/jim',  # current working directory
+    '/home/jim',  # "home"
     '/usr/lib/python3.5',  # standard libraries
     '/usr/local/lib/python3.5/dist-packages',  # user installed third party libraries
     '/usr/lib/python3/dist-packages',  # preinstalled third-party libraries
 ]
 ```
 
-(there maybe other paths too, but above are those of most 
+(there maybe others too, but above are usually of most 
 interest).
 
 The MSP is important. If it is empty, you won't be able to
-import anything, e.g.
+import anything...
 
 ```python
 import sys
@@ -176,7 +176,7 @@ import_examples/
         └── c.py
 ```
 
-with files
+with Python files
 
 ```python
 # a.py
@@ -195,14 +195,14 @@ x = 'hello'
 y = 'bye'
 ```
 
-In the shell, 
+If we do 
 
 ```bash
-cd /path/to/import_examples
-/usr/bin/python3.5 dir0/a.py  # hello
+$ cd /path/to/import_examples
+$ /usr/bin/python3.5 dir0/a.py  # hello
 ```
 
-In `a.py`,
+We can see in `a.py`,
 
 `import b` 
 
@@ -211,28 +211,34 @@ directory containing `a.py`, i.e.
 
 `/path/to/import_examples/dir0`
 
-Thus when the interpreter runs`import b`
+Thus when the interpreter runs `import b`
 the first file it looks for is
 
 `/path/to/import_examples/dir0/b.py`
 
 which exists so its contents are imported! The interpreter then
-moves on to running the next line in `a.py`.
+moves on to the next line in `a.py`.
 
 So far, so good.
 
-Now let's say we modify `a.py`
+Now, say we modify `a.py`
 
 ```python
 # a.py
 import b
-import c
+import c  # extra import
 
 print(b.x)
 print(c.y)
 ```
 
-Unfortunately, `/usr/bin/python3.5 dir0/a.py` now gives an error
+Then
+
+```bash
+$ /usr/bin/python3.5 dir0/a.py
+``` 
+
+gives an error
 
 ```
 Traceback (most recent call last):
@@ -241,75 +247,52 @@ Traceback (most recent call last):
 ImportError: No module named 'c'
 ```
 
-When `import c` is run, the interpreter goes through the MSP as
+Why? Because for `import c`, the interpreter goes through the MSP as
 before. It first looks for a file `/path/to/import_examples/dir0/c.py`.
 
-Because no such file exists, it tries the next path in the MSP, and 
-looks for
+As no such file exists, it looks for the next path in the MSP
 
 `/usr/lib/python3.5/c.py`
 
-
-which also does not exist. It continues through the MSP, looking for
+which also does not exist. Then
 
 `/usr/local/lib/python3.5/dist-packages/c.py`
 
-then 
-
 `/usr/lib/python3/dist-packages/c.py`
 
-neither of which exist. At this point, the interpreter has gone 
-through all the paths in the MSP, so it throws an `ImportError`
-causing the script to terminate.
+neither of which exist. Having gone through all the paths in the MSP, 
+the interpreter throws an `ImportError`.
 
- There are a few ways around this.
+To get around this, we could add the path of the directory containing 
+`c.py` 
 
- We could add the path in question to `sys.path`
+`/path/to/import_examples/dir0/dir1`
+
+to `sys.path`
 
  ```python
  # a.py
 import b
+
 import sys
 sys.path.append('/path/to/import_examples/dir0/dir1')
+
 import c
 ```
 
-or add 
+or `PYTHONPATH`.
 
-```bash
-/path/to/import_examples/dir0/dir1
-```
-
-to the `PYTHONPATH` environment variable.
-
-The problem with both these methods is that every time you want to 
-import a file in a directory not in the MSP, the directory has to be
-added manually (the first method will also quickly make your code
-unsightly and unwieldy).
-
-A better (more conventional) solution? Package imports.
+However, it's easy to imagine how this could quickly get tedious. 
+A better way is to use package imports instead.
 
 ### Package imports
 
 Just as a file containing Python code is known as a module, a directory
-containing Python code is known as a **package**.
+containing modules is known as a **package**.
 
 #### Absolute package imports
 
-Instead of using `PYTHONPATH` or appending to `sys.path` in our code, 
-we can do
-
-```python
-# a.py
-import b
-import dir1.c  # absolute package import
-
-print(b.x)
-print(dir1.c.y)
-```
-
-where we add `__init__.py` to `dir1` so our directory tree now 
-looks like
+Let's add `__init__.py` to `dir1`
 
 ```
 import_examples/
@@ -321,59 +304,41 @@ import_examples/
         └── c.py
 ```
 
-Now, `/usr/bin/python3.5 dir0/a.py` displays
-
-```
-hello
-bye
-```
-
-as expected.
-
-This works because Python has something called **absolute
-package imports** which are imports starting with `import` followed
-by dot notation, i.e. of the form
+and modify `a.py`
 
 ```python
-import dir_A.dir_B.dir_C.dir_D.file_E
+import b
+import dir1.c  # absolute package import
+
+print(b.x)
+print(dir1.c.y)
 ```
 
-where each directory in the import statement contains an `__init__.py`
-file, i.e.
+Now
 
-`dir_A`
+```bash
+$ /usr/bin/python3.5 dir0/a.py
+# hello
+# bye
+``` 
 
-`dir_B`
+works because Python has something called **absolute
+package imports** which start with `import` followed
+by dot notation, e.g.
 
-`dir_C`
+`import dir1.dir2.dir3.dir4.file5`
+where
+`dir1`, `dir2`, `dir3`, `dir4` each contain an `__init__.py`
+file (this lets Python know the directory is a package).
 
-`dir_D` 
+The interpreter processes an absolute package import the
+same way as before, replacing the dots with path separators, e.g. the first
+file
 
-each contain a file named `__init__.py` (which can be empty).
-This lets Python know that each of these directories is a package.
-
-When the interpreter sees an absolute package import, it works in the
-same way as when it sees a file import, e.g. when it sees
-
-```python
-import dir1.c
-```
+`import dir1.c`
 
 it goes through the paths in the MSP in the same way as before, 
-replacing the dots with path separators, i.e. when running `a.py` with
-
-```bash
-/usr/bin/python3.5 dir0/a.py
-```
-
-the first path the interpreter checks is the resulting path from 
-combining the first path in the MSP with `dir1.c`, i.e.
-
-```bash
-# "home" path in MSP -> /path/to/import_examples/dir0
-# dir1.c -> dir1/c.py
-/path/to/import_examples/dir0/dir1/c.py
-```
+replacing the dots with path separators.
 
 #### Relative package imports
 
