@@ -14,7 +14,7 @@ languages.
 However, certain aspects can seem a bit mysterious and have a tendency to 
 frustrate those lacking experience:
 
-- Different kinds of library imported (standard library, third-party, user created; preinstalled vs 
+- Different libraries imported (standard library, third-party, user created; preinstalled vs 
 user installed)
 - Different import methods (file vs. package imports; 
 absolute package imports vs. relative package imports)
@@ -23,31 +23,31 @@ versions, e.g. Python 2.7 vs Python 3.6)
 - Different ways of installing third-party libraries (various package managers 
 and cloud repositories)
 - Virtual environments
-- Creation of your own libraries and making them accessible to others
+- Creating your own libraries and making them accessible to others
 
-Further, these aspects can vary across platforms 
-(Linux, macOS, Windows,...) and sometimes even experienced 
+Sometimes even experienced 
 developers coming to Python from other languages can find themselves in
 sticky situations, e.g. "I think I did something 
 to my system Python" or are left scratching their heads.
 
-In this post we are going to take a first pass at the first two points, different libraries and import methods,
-and provide an introduction to imports in Python, trying a "first 
-principles" approach.
+In this post we are going to take a look at the first two points, different libraries and import methods.
+
+In doing so, we will provide an introduction to imports in Python, taking 
+a "first principles" approach.
 
 The examples in the post were run on Ubuntu 16.04. Whilst details will 
 vary, the general concepts should be platform agnostic (although Windows
 users may have a harder time following).
 
-## Python interpreters
+## Python interpreters and libraries
 
 Before getting started, a few words on interpreters
 as without an interpreter we won't be importing anything!
 
 On Linux / macOS, usually at least one Python interpreter comes preinstalled.
 
-In reality, any preinstalled Python interpreter should not be used 
-for development work.
+In reality, any preinstalled, i.e. system Python interpreter should not 
+be used for development work.
 
 However, in this post we will do so to keep things as simple
 as possible and concentrate on imports.
@@ -60,7 +60,7 @@ and a Python 3 interpreter, e.g.
 
 `/usr/bin/python3.5`
 
-preinstalled (from hereon examples will 
+preinstalled (from hereon examples  
 refer to Python 3) as well as Python libraries:
 
 - Standard library in `/usr/lib/python3.5`
@@ -77,14 +77,14 @@ In your
 standard library directory, you should see files like `random.py` that
 are part of the standard library.
 
-At a minimum, you should have an interpreter and 
-the standard library preinstalled.
+At a minimum, an interpreter and the standard library should be 
+preinstalled.
 
 ## Out-of-the-box imports
 
-If you write in a Python script or Python shell
-(assuming you have a `requests` directory in 
-`/usr/lib/python3/dist-packages`)
+If you write in a Python script or Python shell,
+and assuming you have a `requests` directory in 
+`/usr/lib/python3/dist-packages`
 
 ```python
 import random
@@ -93,26 +93,25 @@ import requests
 requests.get('http://bbc.co.uk')
 random.randint(0,10)
 ```
-just works - you have successfully imported and used two 
+just works - you have successfully imported and called functions in two 
 libraries.
 
 A couple of points:
 
-- The imported library might be a file, e.g. `random.py` or a 
-directory, e.g. `requests`.
-- The `import` statements make no reference to any directory paths; how does
-Python know where to find the relevant files?
+- The import might refer to a file (module), e.g. `random.py` or a 
+directory (package), e.g. `requests`.
+- `import` statements make no reference to any directory paths; how does
+Python know where to find the relevant code?
 
 The answer is the **Module Search Path (MSP).** 
 
-The MSP is a variable set at the start of each script / 
-Python shell session.
+The MSP is a variable set each time a Python script or shell is run.
 
 The MSP is a list of directory paths. 
 
-If you write `import johnny-cache`, 
+If you write `import requests`, 
 Python will take the first directory path in the MSP and see if 
-there is a file or directory called `johnny-cache` in that 
+there is a file or directory called `requests` in that 
 directory. 
 
 If it so, it 
@@ -246,7 +245,7 @@ ImportError: No module named 'c'
 
 because the interpreter first looks for a file 
 `/path/to/import_examples/dir0/c.py` which does not exist
-so it looks for the next path in the MSP
+so it moves on to the next path in the MSP and looks for a file
 
 `/usr/lib/python3.5/c.py`
 
@@ -258,7 +257,7 @@ and
 
 `/usr/lib/python3/dist-packages/c.py`
 
-which also both do not exist. At this point, the interpreter has gone 
+neither of which exist. At this point, the interpreter has gone 
 through all the paths in the MSP without success so it throws
 an `ImportError`.
 
@@ -267,17 +266,21 @@ To get round this, we could add the path of the directory containing
 
 `/path/to/import_examples/dir0/dir1`
 
-to `sys.path` like so
+to the MSP
 
  ```python
  # a.py
-import b
 import sys
-sys.path.append('/path/to/import_examples/dir0/dir1')
+sys.path.append('/path/to/import_examples/dir0/dir1')  # add path to MSP
+
+import b
 import c
+
+print(b.x)
+print(c.y)
 ```
 
-or `PYTHONPATH`.
+or to `PYTHONPATH`.
 
 However, both methods get quickly tedious. 
 A better way is to use **package imports.**
@@ -448,7 +451,7 @@ package import
 ValueError: attempted relative import beyond top-level package
 ```
 
-Why this error?
+Why this?
 
 Recall a directory is only a package if it contains `__init__.py`. Thus 
 `dir1` is the only package in `import_examples`. Since it is the only 
@@ -458,7 +461,7 @@ As
 `from ...`
 
 takes us into `dir0`, i.e. above the root package `dir1`, Python raises a 
-`ValueError` exception.
+the above `ValueError` exception.
 
 What if we added `__init__.py` to `dir0`?
 
@@ -506,9 +509,9 @@ As the last example shows, package imports in Python are not always
 straightforward even for relatively simple use cases.
 
 However, despite this, my view is they are
-still much more preferable to using `PYTHONPATH` or modifying 
+still much more preferable to modifying `PYTHONPATH` or 
 `sys.path`.
 
 Further, package imports are in widespread use, so even if you don't 
-use them yourself understanding them will be helpful when reading 
+use them yourself, understanding them will be helpful when reading 
 others' code.
