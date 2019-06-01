@@ -14,13 +14,13 @@ languages.
 However, certain aspects can seem a bit mysterious and have a tendency to 
 frustrate those lacking experience:
 
-- Multitude of files imported (standard library, third-party, preinstalled vs 
-user installed, user created)
-- Multitude of import methods (file vs. package imports, 
+- Different kinds of library imported (standard library, third-party, user created; preinstalled vs 
+user installed)
+- Different import methods (file vs. package imports; 
 absolute package imports vs. relative package imports)
-- Multiple interpreters (preinstalled vs user installed, different 
+- Different interpreters (preinstalled vs user installed; different 
 versions, e.g. Python 2.7 vs Python 3.6)
-- Installation of third-party libraries (different package managers 
+- Different ways of installing third-party libraries (various package managers 
 and cloud repositories)
 - Virtual environments
 - Creation of your own libraries and making them accessible to others
@@ -31,7 +31,7 @@ developers coming to Python from other languages can find themselves in
 sticky situations, e.g. "I think I did something 
 to my system Python" or are left scratching their heads.
 
-In this post we are going to take a first pass at the first two points 
+In this post we are going to take a first pass at the first two points, different libraries and import methods,
 and provide an introduction to imports in Python, trying a "first 
 principles" approach.
 
@@ -41,7 +41,7 @@ users may have a harder time following).
 
 ## Python interpreters
 
-Before getting on to imports, a few words on interpreters
+Before getting started, a few words on interpreters
 as without an interpreter we won't be importing anything!
 
 On Linux / macOS, usually at least one Python interpreter comes preinstalled.
@@ -49,9 +49,8 @@ On Linux / macOS, usually at least one Python interpreter comes preinstalled.
 In reality, any preinstalled Python interpreter should not be used 
 for development work.
 
-However, in this post we will do so to 
-avoid the extra step of installing and using our own 
-interpreter in a virtual envrionment.
+However, in this post we will do so to keep things as simple
+as possible and concentrate on imports.
 
 On a clean Ubuntu OS, there is a Python 2 interpreter, e.g.
 
@@ -71,7 +70,7 @@ but your mileage may vary, e.g. you might have only files and
 directories from the standard library preinstalled or only one 
 interpreter.
 
-In my case, I had directories like 
+In my case, I had directories like
 `requests`, `bs4` in `/usr/lib/python3/dist-packages`.
 
 In your 
@@ -334,9 +333,11 @@ each contain `__init__.py` (this file lets Python know the directory
 it is in is a package).
 
 The interpreter follows the same steps as before, only now it also deals
-with the dot notation - 
+with dot notation - 
 it replaces the dots with operating system path separators,
 e.g. `/` for Linux.
+
+In `a.py`, `import dir1.c` is an absolute package import.
 
 So, the first file the interpreter looks for is
 
@@ -344,9 +345,7 @@ So, the first file the interpreter looks for is
 
 prepended to
 
-`dir1/c.py`
-
-i.e. 
+`dir1/c.py`, i.e. 
 
 `/path/to/import_examples/dir0/dir1/c.py`
 
@@ -444,62 +443,51 @@ package import
 
 `from ... import b `
 
-`ValueError: attempted relative import beyond top-level package`
-
-as recall the only way Python knows a directory is a package is via 
-the presence of `__init__.py`.
-
-From the directory tree, we can see there is only one package with a
-package root of `/path/to/import_examples/dir0/dir1`.
-
-Thus it is not possible to access `b.py` this way as it is 
-in `/path/to/import_examples/dir0`, i.e. above the package root.
-
-What if we added an `__init__.py` to `dir0`? This would mean we would 
-have two packages, one with root 
-
-`/path/to/import_examples/dir0`
-
-and one with root
-
-`/path/to/import_examples/dir0/dir1`.
-
-But the second package root overrides the first one so in `d.py` we 
-still cannot import `b.py` using a relative package import, `b.py`
-is still above the package root.
-
-What if we got rid of the second package root, i.e. removed 
-`/path/to/import_examples/dir0/dir1/__init__.py`?
-
-```python
-# d.py
-from ... import b  # relative package import
+```
+    from ... import b
+ValueError: attempted relative import beyond top-level package
 ```
 
-now works, but the absolute package import in `a.py`
+Why this error?
 
-```python
-# a.py
-import dir1.c  # absolute package import
+Recall a directory is only a package if it contains `__init__.py`. Thus 
+`dir1` is the only package in `import_examples`. Since it is the only 
+package, it must be the root package for our relative package imports.
+As
+
+`from ...`
+
+takes us into `dir0`, i.e. above the root package `dir1`, Python raises a 
+`ValueError` exception.
+
+What if we added `__init__.py` to `dir0`?
+
+This does not work as `dir1` is still the root package, not `dir0`.
+
+What if we added `__init__.py` to `dir0` and removed `__init__.py` 
+in `dir1`? 
+
+Then `from ... import b` works. 
+
+But `import dir1.c` in `a.py`
+doesn't because it is an absolute package import so `dir1` 
+needs an `__init__.py`.
+
+What if we used a relative package import instead, i.e.
+`from .dir1 import c`? We get another error
+
+`ModuleNotFoundError: No module named '__main__.dir1'; '__main__' is not a package`
+
+because [Python does not let you do relative package imports
+in top level scripts.](https://stackoverflow.com/questions/33837717/systemerror-parent-module-not-loaded-cannot-perform-relative-import.)
+
+The upshot of this is we cannot do
+
+```bash
+$ /usr/bin/python3.5 dir0/a.py
 ```
 
-doesn't as recall in an absolute package import, every directory 
-needs to have an `__init__.py`. 
-
-What if we used a relative package import instead, 
-i.e. replaced the above with
-
-```python
-# a.py
-from .dir1 import c  # relative package import
-```
-
-This in theory should work, except that `a.py` is the top level 
-script, and [Python does not let you do relative package imports
-in top level scripts](https://stackoverflow.com/questions/33837717/systemerror-parent-module-not-loaded-cannot-perform-relative-import.)
-
-**Upshot:** We cannot run `/path/to/import_examples/a.py` and import 
-`b.py` in `d.py` using a relative package import.
+and import `b.py` in `d.py` using a relative package import.
 
 We have to instead use an absolute package import
 
@@ -514,13 +502,13 @@ z = 'ciao'
 
 ## Conclusion
 
-As the last example shows, package imports in Python can get 
-quite involved even when starting from very simple use cases.
+As the last example shows, package imports in Python are not always
+straightforward even for relatively simple use cases.
 
-However, despite this, my view is that package imports are
+However, despite this, my view is they are
 still much more preferable to using `PYTHONPATH` or modifying 
 `sys.path`.
 
 Further, package imports are in widespread use, so even if you don't 
-use them yourself you will need knowledge of them to understand 
+use them yourself understanding them will be helpful when reading 
 others' code.
