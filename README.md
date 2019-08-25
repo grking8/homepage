@@ -2,7 +2,6 @@
 
 Personal homepage / blog using the [Jekyll theme minima.](https://jekyll.github.io/minima/)
 
-<<<<<<< HEAD
 Uses template repository [test-website.](https://github.com/family-guy/test-website)
 
 ## Installation
@@ -18,17 +17,6 @@ Uses template repository [test-website.](https://github.com/family-guy/test-webs
 - `jekyll serve`
 - Navigate to `http://localhost:4000` in a browser, you should see the landing page
 --
-
-### Enabling Excerpts on the Home Page
-
-To display post-excerpts on the Home Page, simply add the following to your `_config.yml`:
-
-```yaml
-show_excerpts: true
-```
-
-## Contributing
->>>>>>> minima/master
 
 ## Documentation
 
