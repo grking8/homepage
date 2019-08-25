@@ -515,3 +515,17 @@ still much more preferable to modifying `PYTHONPATH` or
 Further, package imports are in widespread use, so even if you don't 
 use them yourself, understanding them will be helpful when reading 
 others' code.
+
+<br>
+<br>
+
+---
+
+<br>
+<br>
+
+{% include disclaimer.md %}
+
+## References
+
+- [Learning Python, 5th Edition - Mark Lutz](http://shop.oreilly.com/product/0636920028154.do)

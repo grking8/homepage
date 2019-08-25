@@ -6,7 +6,7 @@ set -xe
 cd ../${DEPLOY_SCRIPTS_REPO}/ssl
 echo "Create SSL files..."
 ./create-ssl-files.sh true
-mkdir -p ../../project/config
+mkdir ../../project/config
 mv $SSL_PRIVATE_KEY_FILE ../../project/config
 mv $SSL_CERTIFICATE_FILE ../../project/config
 echo "Create webserver config..."
