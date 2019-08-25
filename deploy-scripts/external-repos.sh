@@ -15,10 +15,10 @@ if [ $1 = true ]; then
     apk add git
 fi
 SSH_DIR=/root/.ssh
-if [ ! -f $SSH_DIR ]; then
+if [ ! -d $SSH_DIR ]; then
     mkdir $SSH_DIR
 fi
-ssh-keyscan -H $EXTERNAL_GITHOST >> ~/.ssh/known_hosts
+ssh-keyscan -H $EXTERNAL_GITHOST >> /root/.ssh/known_hosts
 cd ..
 git clone $WEBSERVER_REPO_URL
 git clone $DEPLOY_SCRIPTS_REPO_URL
