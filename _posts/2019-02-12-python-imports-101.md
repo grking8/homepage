@@ -3,6 +3,7 @@ layout: post
 title: Python Imports 101
 author: familyguy
 comments: true
+tags: python
 ---
 
 {% include post-image.html name="2416585_0.jpg" width="100" height="100" 
