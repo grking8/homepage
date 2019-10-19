@@ -1,6 +1,25 @@
 version: 2
 jobs:
 
+  pre-build:
+    docker:
+      - image: continuumio/miniconda3:latest
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "$EXTERNAL_GITHOST_SSH_FINGERPRINT"
+      - run:
+          name: Download external build scripts and build conda environment
+          command: deploy-scripts/bootstrap.sh
+      - run:
+          name: Set project-level build environment variables
+          command: python bootstrap/${BOOTSTRAP_REPO}/circleci/update_env_vars.py --file env-vars.json
+      - persist_to_workspace:
+          root: .
+          paths:
+            - bootstrap/deploy-scripts
+
   build:
     docker:
       - image: jekyll/jekyll:3.5.0
@@ -24,75 +43,109 @@ jobs:
           paths:
             - _site
 
-  configure-webserver-ssl:
+  renew-ssl:
     docker:
       - image: alpine:latest
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-              - "$EXTERNAL_GITHOST_SSH_FINGERPRINT"
       - run:
-          name: Download external libraries
-          command: deploy-scripts/external-repos.sh true
-      - run:
-          name: Create SSL files and configure web server
-          command: deploy-scripts/configure-webserver.sh
-      - persist_to_workspace:
-          root: .
-          paths:
-            - config
-
-  containerise:
-    docker:
-      - image: google/cloud-sdk:latest
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-              - "$EXTERNAL_GITHOST_SSH_FINGERPRINT"
-      - setup_remote_docker
+          name: Install latest ca-certificates
+          command: apk add ca-certificates
       - attach_workspace:
           at: .
       - run:
-          name: Download external libraries
-          command: deploy-scripts/external-repos.sh false
+          name: Get SSL files from certbot to update environment variables
+          command: bootstrap/${BOOTSTRAP_REPO}/static-website/ssl/renew-ssl.sh
+
+  create-ssl:
+    docker:
+      - image: alpine:latest
+    steps:
+      - checkout
       - run:
-          name: Build Docker image and push to container registry
-          command: deploy-scripts/containerise.sh
+          name: Install latest ca-certificates
+          command: apk add ca-certificates
+      - attach_workspace:
+          at: .
+      - run:
+          name: Create SSL files
+          command: bootstrap/${BOOTSTRAP_REPO}/static-website/ssl/create-ssl-files.sh true
+      - persist_to_workspace:
+          root: .
+          paths:
+            - fullchain.pem
+            - privkey.pem
+
+  containerise:
+      docker:
+        - image: google/cloud-sdk:latest
+      steps:
+        - checkout
+        - setup_remote_docker
+        - attach_workspace:
+            at: .
+        - run:
+            name: Build Docker image and push to container registry
+            command: bootstrap/${BOOTSTRAP_REPO}/static-website/containerise.sh false
 
   deploy-production:
     docker:
       - image: google/cloud-sdk:latest
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-              - "$EXTERNAL_GITHOST_SSH_FINGERPRINT"
+      - attach_workspace:
+          at: .
       - run:
-          name: Download external libraries
-          command: deploy-scripts/external-repos.sh false
-      - run:
-          name: Create or update GCP instance
-          command: deploy-scripts/create-update-instance.sh
+          name: Create or update GCP instance and run Docker image
+          command: bootstrap/${BOOTSTRAP_REPO}/static-website/gcp/authenticate-create-update-instance.sh
 
 workflows:
   version: 2
-  build-configure-webserver-ssl-containerise-deploy-production:
+  build-ssl-containerise-deploy:
     jobs:
-      - build
-      - configure-webserver-ssl:
+      - pre-build
+      - build:
+          requires:
+            - pre-build
+      - create-ssl:
           requires:
             - build
       - containerise:
           requires:
-            - configure-webserver-ssl
+            - create-ssl
           filters:
             branches:
-              only: master
+              only:
+                - master
       - deploy-production:
           requires:
             - containerise
           filters:
             branches:
-              only: master
+              only:
+                - master
+  build-renew-ssl-containerise-deploy:
+    triggers:
+      - schedule:
+          cron: "37 16 5 * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - pre-build
+      - build:
+          requires:
+            - pre-build
+      - renew-ssl:
+          requires:
+            - build
+      - create-ssl:
+          requires:
+            - renew-ssl
+      - containerise:
+          requires:
+            - create-ssl
+      - deploy-production:
+          requires:
+            - containerise

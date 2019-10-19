@@ -14,18 +14,18 @@ order: 3
 
     _CircleCI, Docker, GCP Container Registry, GCP Compute Engine, Let's Encrypt_
 
-    [source, ](https://github.com/family-guy/test-website) 
-    [wiki](https://github.com/family-guy/test-website/wiki)
+    [wiki, ](https://github.com/family-guy/test-website/wiki)
+    [source](https://github.com/family-guy/test-website) 
 
 - ### homepage
     
-    **Personal homepage and blog using static website template^^**
+    **Personal homepage and blog using static website template ^^^**
     
     _Jekyll, CircleCI, Docker, GCP Container Registry, GCP Compute Engine, Let's Encrypt_
 
-    [source, ](https://github.com/family-guy/homepage) 
     [wiki, ](https://github.com/family-guy/homepage/wiki)
-    [demo](https://guyrking.com)
+    [source, ](https://github.com/family-guy/homepage) 
+    [deployment](https://guyrking.com)
 
 - ### aiostorage
 
@@ -33,9 +33,9 @@ order: 3
     
     _Python, PyPI, pip, conda, CircleCI, Backblaze, Read the Docs_
     
-    [source, ](https://github.com/family-guy/aiostorage)
-    [docs, ](http://aiostorage.readthedocs.io/)
-    [wiki](https://family-guy.github.io/aiostorage-wiki/)
+    [wiki, ](https://family-guy.github.io/aiostorage-wiki/)
+    [documentation, ](http://aiostorage.readthedocs.io/)
+    [source](https://github.com/family-guy/aiostorage)
     
 ## Contributor
 
@@ -58,4 +58,4 @@ order: 3
     _Python, pandas, scipy, MySQL, AWS EC2, GitLab CI/CD, Docker, GCP,
     Let's Encrypt_
     
-    [website](https://zorncapital.com)
+    [company website](https://zorncapital.com)

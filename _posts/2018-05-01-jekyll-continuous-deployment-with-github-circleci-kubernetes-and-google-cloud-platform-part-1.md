@@ -191,7 +191,7 @@ and in our project root, `build-jekyll.sh`
 
 set -xe
 
-mkdir -p _site
+mkdir site
 jekyll build
 ```
 
