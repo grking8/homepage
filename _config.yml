@@ -1,6 +1,21 @@
 title: Guy King
 author: Guy King
 email: grking8@gmail.com
+url: https://guyrking.com
+logo: favicon.ico
+social: 
+  name: Guy King
+  links:
+    - https://www.facebook.com/dairy.myriad
+    - https://uk.linkedin.com/in/guy-king-76454b190
+    - https://github.com/grking8
+google_site_verification: 3ySRxBWLKexu3HT_1LRgu3i7dzrG2Y2-47XaBlOImF0
+lang: en_UK
+seo:
+  links:
+    - https://www.facebook.com/dairy.myriad
+    - https://uk.linkedin.com/in/guy-king-76454b190
+    - https://github.com/grking8
 description: > # this means to ignore newlines until "github_username:"
   Personal homepage and blog
 
