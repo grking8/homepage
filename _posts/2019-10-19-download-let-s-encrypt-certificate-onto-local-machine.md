@@ -3,11 +3,11 @@ layout: post
 title: Download Let's Encrypt Certificate Onto Local Machine
 author: familyguy
 comments: true
-tags: lets-encrypt certbot ssl-certificates
+tags: lets-encrypt certbot ssl-certificates docker
 ---
 
 {% include post-image.html name="download.png" width="300" height="200" 
-alt="python logo" %}
+alt="lets encrypt logo" %}
 
 This post describes how to download Let's Encrpt SSL files onto your 
 local machine using the `certbot` command line tool.
