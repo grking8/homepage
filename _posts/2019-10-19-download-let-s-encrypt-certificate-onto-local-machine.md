@@ -23,7 +23,8 @@ instructions in this post accordingly.
 
 ## Steps
 
-- Set the directory that `certbot` 
+### Step 1
+Set the directory that `certbot` 
 will output the SSL files to inside the Docker container
 
 ```bash
@@ -37,7 +38,8 @@ local machine
 export LOCAL_CERTBOT_DIR=/path/to/local/folder
 ```
 
-- Run the `certbot` command via Docker to download the SSL files 
+### Step 2
+Run the `certbot` command via Docker to download the SSL files 
 (including the certificate)
 
 ```bash
@@ -55,45 +57,52 @@ certbot/certbot \
     certonly
 ```
 
-- After following the prompts, you will be instructed to deploy a DNS text record
+### Step 3
+After following the prompts, you will be instructed to deploy a DNS text record
 
-```
-Please deploy a DNS TXT record under the name
-_acme-challenge.<my-domain> with the following value:
+`Please deploy a DNS TXT record under the name`
+`_acme-challenge.<my-domain> with the following value:`
 
-<value>
+`<value>`
 
-Before continuing, verify the record is deployed.
--------------------------------------------------------------------------------
-Press Enter to Continue
-```
+`Before continuing, verify the record is deployed.`
+`-------------------------------------------------------------------------------`
+`Press Enter to Continue`
 
-- Go into the DNS configuration of your domain registrar and create a new record
-    - Type: `TXT`
-    - Name: `_acme-challenge`
-    - Value: `<value>`
+Go into the DNS configuration of your domain registrar and create a new record
+- Type: `TXT`
+- Name: `_acme-challenge`
+- Value: `<value>`
 
-- Verify the record has been added `dig -t txt _acme-challenge.<my-domain>` (in the answer section, look for something like below)
+### Step 4
+Verify the record has been added 
 
-```
-;; ANSWER SECTION:
-_acme-challenge.<my-domain>. 300 IN	TXT	<value>
-```
+```bash
+dig -t txt _acme-challenge.<my-domain>
+``` 
+
+(in the answer section, look for something like below)
+
+`;; ANSWER SECTION:`
+
+`_acme-challenge.<my-domain>. 300 IN	TXT	<value>`
 
 This can sometimes take a while, but once it's done, press `Enter`
 
-- If successful, you will see something like
+If successful, you will see something like
 
-```
- - Congratulations! Your certificate and chain have been saved at:
-   ${CERTBOT_DIR}/live/<my-domain>/fullchain.pem
-   Your key file has been saved at:
-   ${CERTBOT_DIR}/live/<my-domain>/privkey.pem
-```
+`Congratulations! Your certificate and chain have been saved at:`
+
+`${CERTBOT_DIR}/live/<my-domain>/fullchain.pem`
+
+`Your key file has been saved at:`
+
+`${CERTBOT_DIR}/live/<my-domain>/privkey.pem`
 
 where `fullchain.pem` is the SSL certificate file and `privkey.pem` the SSL private key file.
 
-- Check the SSL files are available locally 
+### Step 5
+Check the SSL files are available locally 
 
 ```bash
 ls $LOCAL_CERTBOT_DIR/live/<my-domain>

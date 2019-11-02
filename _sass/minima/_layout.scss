@@ -252,6 +252,7 @@
  */
 .post-header {
   margin-bottom: $spacing-unit;
+  color: #657786;
 }
 
 .post-title,
@@ -269,6 +270,7 @@
   margin-bottom: $spacing-unit;
 
   h2 {
+    color: #FFA500;
     @include relative-font-size(1.75);
 
     @media screen and (min-width: $on-large) {
@@ -277,6 +279,7 @@
   }
 
   h3 {
+    color: #AAB8C2;
     @include relative-font-size(1.375);
 
     @media screen and (min-width: $on-large) {
@@ -285,6 +288,7 @@
   }
 
   h4 {
+    color: #AAB8C2;
     @include relative-font-size(1.125);
 
     @media screen and (min-width: $on-large) {
