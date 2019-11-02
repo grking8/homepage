@@ -181,6 +181,7 @@ code {
   border-radius: 3px;
   background-color: #002b36;
   color: #fdf6e3;
+  font-size: 14px;
 }
 
 code {
@@ -198,6 +199,10 @@ pre {
   }
 }
 
+.highlighter-rouge {
+  color: #e83e8c !important;
+  background-color: #ffffff !important;
+}
 
 
 /**

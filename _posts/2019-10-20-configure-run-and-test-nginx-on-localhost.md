@@ -44,9 +44,7 @@ machine, using Docker means you can easily:
     - Reset your Nginx configuration files
     - Run multiple Nginx processes at the same time
     - Change the port Nginx runs on
-    - Change Nginx version
-
-..., etc. 
+    - Change Nginx version..., etc. 
 
 ## Getting started
 
@@ -68,9 +66,7 @@ In the container shell, check Nginx is installed
 which nginx
 ```
 
-```
-/usr/sbin/nginx
-```
+`/usr/sbin/nginx`
 
 and that it is running
 
@@ -78,27 +74,18 @@ and that it is running
 service nginx status
 ```
 
-```
-[FAIL] nginx is not running ... failed!
-```
+`[FAIL] nginx is not running ... failed!`
 
 As it is not running, start it
 
 ```bash
-service nginx start
+service nginx start; service nginx status
 ```
 
-```bash
-service nginx status
-```
+`[ ok ] nginx is running.`
 
-```
-[ ok ] nginx is running.
-```
-
-Make a request to `http://localhost:8000` in the browser.
-
-You should see the "Welcome to nginx!" page.
+Make a request to `http://localhost:8000` in the browser. You should see the 
+`"Welcome to nginx!"` page.
 
 Similarly, in Python
 
@@ -116,10 +103,9 @@ status code.
 You should also see the relevant logs in the container 
 shell
 
-```
-172.17.0.1 - - [21/Oct/2019:17:53:21 +0000] "GET /favicon.ico HTTP/1.1" 404 555 "http://localhost:8000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36" "-"
-172.17.0.1 - - [21/Oct/2019:17:54:51 +0000] "GET / HTTP/1.1" 200 612 "-" "python-requests/2.18.4" "-"
-```
+`172.17.0.1 - - [21/Oct/2019:17:53:21 +0000] "GET /favicon.ico HTTP/1.1" 404 555 "http://localhost:8000/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36" "-"`
+
+`172.17.0.1 - - [21/Oct/2019:17:54:51 +0000] "GET / HTTP/1.1" 200 612 "-" "python-requests/2.18.4" "-"`
 
 ## Changing the "Welcome to nginx" page
 
@@ -195,16 +181,11 @@ server {
 }
 ```
 
-As the web server document root is 
-
-```
-/usr/share/nginx/html
-```
-
-Inside `/usr/share/nginx/html` is `index.html`. 
+As the web server document root is `/usr/share/nginx/html`,
+inside `/usr/share/nginx/html` is `index.html`. 
 
 Change `index.html` so that the title and header reads
-"Bienvenue a nginx!" instead of "Welcome to nginx!".
+`"Bienvenue a nginx!"` instead of `"Welcome to nginx!"`.
 
 To let the changes take effect, restart Nginx
 
@@ -217,7 +198,7 @@ see the new title and header.
 
 ## Changing the Nginx configuration to prevent web cache poisoning
 
-Here is a definition of [web cache poisoning](https://www.theregister.co.uk/2018/08/17/web_cache_poisoning/)
+[Web cache poisoning:](https://www.theregister.co.uk/2018/08/17/web_cache_poisoning/)
 
 > Web cache poisoning is geared towards sending a request that causes a harmful response that then gets saved in the cache and served to other users.
 
@@ -231,12 +212,8 @@ Thus if you have a Django URL `/my-login`, and the host in the
 request header is `malicious-hacker.com` (although your site's
 domain is `my-site.com`), if Django internally makes requests
 to `/my-login`, these requests will go to
-
-`http://malicious-hacker.com/my-login`
-
-and not
-
-`http://my-site.com/my-login`
+`http://malicious-hacker.com/my-login` and not
+`http://my-site.com/my-login`.
 
 `http://malicious-hacker.com/my-login` then sends a harmful
 response that gets saved in the cache and served to other users.
@@ -254,7 +231,7 @@ ALLOWED_HOSTS = ['my-site.com']
 Django will only make requests to `my-site.com`. If an attacker
 sends a request with host `malicious-hacker.com`, it throws
 a `SuspiciousOperation` error and returns a `Bad request` 
-response with status code 400.
+response with status code `400`.
 
 One of the drawbacks of the above is that it usually leads to 
 noisy logging due to bots checking for 
@@ -262,7 +239,7 @@ vulnerabilities in your site.
 
 Assuming your website is served by Nginx, one way around
 this is to configure Nginx so that any request with a host
-in the header not equal to `my-site.com` is given a 4xx 
+in the header not equal to `my-site.com` is given a `4xx` 
 error response (ideally, the error code should capture just
 this issue as otherwise all you have done is transferred
 your noisy logging problem from Django to Nginx).
@@ -281,16 +258,14 @@ r = requests.get(url, headers=headers)
 
 The response is exactly the same as before, despite having 
 
-```
-server_name  localhost;
-```
+`server_name  localhost;`
 
 in our server block in `default.conf` and the host in the
 request header being `abc.com`. 
 
 ### Changing the Nginx configuration
 
-So why did we get a 200 response despite
+So why did we get a `200` response despite
 the host in the Nginx configuration not matching the host sent
 in the request?
 
@@ -314,20 +289,12 @@ service nginx reload
 ```
 
 Now, making the same request in Python, we get a response
-status code of 
+status code of `403` with content
 
-```
-403
-```
-
-with content
-
-```
-'Your request is forbidden'
-```
+`'Your request is forbidden'`
 
 However, if we spoof the header with a host different to 
-`abc.com`, we will get a 200 again.
+`abc.com`, we will get a `200` again.
 
 Actually, all we have to do is add
 
