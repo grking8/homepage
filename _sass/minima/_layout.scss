@@ -270,7 +270,7 @@
   margin-bottom: $spacing-unit;
 
   h2 {
-    color: orange;
+    color: #FFA500;
     @include relative-font-size(1.75);
 
     @media screen and (min-width: $on-large) {
