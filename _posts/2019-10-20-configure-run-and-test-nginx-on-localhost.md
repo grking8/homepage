@@ -134,7 +134,7 @@ vi default.conf
 
 You should see the following configuration or similar
 
-```
+```nginx
 server {
     listen       80;
     server_name  localhost;
@@ -274,7 +274,7 @@ it uses the first server block.
 
 To check this, let's add 
 
-```
+```nginx
 server {
     listen 80;
     server_name abc.com;
@@ -298,7 +298,7 @@ However, if we spoof the header with a host different to
 
 Actually, all we have to do is add
 
-```
+```nginx
 server {
     listen 80;
     return 403 "Your request is forbidden";
@@ -313,7 +313,7 @@ Now, whenever the host in the header is not equal to
 Although functionally it makes no difference, the convention
 is to add `default_server` to the block, i.e. to have
 
-```
+```nginx
 server {
     listen 80 default_server;
     return 403 "Your request is forbidden";

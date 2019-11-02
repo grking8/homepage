@@ -3,6 +3,7 @@ layout: post
 title: HTTPS With Let's Encrypt, Nginx, And Docker
 author: familyguy
 comments: true
+tags: lets-encrypt certbot ssl-certificates docker nginx https
 ---
 
 {% include post-image.html name="Whale Logo332_5.png" width="75" height="50" alt="Docker logo" %}
@@ -15,7 +16,7 @@ There are numerous posts online on how to do this, usually using Nginx as a [rev
 
 As Nginx is currently running inside a Docker container, it probably isn't installed yet on the host instance itself
 
-```
+```bash
 sudo apt-get update
 sudo apt-get install nginx
 ```
@@ -24,39 +25,39 @@ sudo apt-get install nginx
 
 [Let's Encrypt](https://letsencrypt.org/) is a free SSL/TLS certificate provider accepted by modern browsers for HTTPS communication. Certficates expire after three months and are renewable.
 
-Installation and configuration is easiest via [certbot](https://certbot.eff.org/#ubuntuxenial-nginx) (follow the instructions under **Install**).
+Installation and configuration is easiest via [`certbot`](https://certbot.eff.org/#ubuntuxenial-nginx) (follow the instructions under **`Install`**).
 
 ## Step 3
 
-```
+```bash
 sudo certbot --nginx -d <mydomain>
 ```
 
-replacing \<mydomain\> with the domain your app is currently being served from:
+replacing `<mydomain>` with the domain your app is currently being served from:
 
 > Running this command will get a certificate for you and have Certbot edit your Nginx configuration automatically to serve it. 
 
-When prompted, select `redirect all HTTP requests to HTTPS`.
+When prompted, select `"redirect all HTTP requests to HTTPS"`.
 
-At this stage, you can check everything works by starting Nginx (and stopping any processes running on ports 80 and 443)
+At this stage, you can check everything works by starting Nginx (and stopping any processes running on ports `80` and `443`)
 
-```
+```bash
 sudo systemctl start nginx
 ```
 
-then navigating in a browser to \<mydomain\>. You should see a padlock in the address bar and the default [Debian-Nginx message.](https://www.howtoforge.com/images/install_and_configure_lemp_in_debian_9/6.PNG)
+then navigating in a browser to `<mydomain>`. You should see a padlock in the address bar and the default [Debian-Nginx message.](https://www.howtoforge.com/images/install_and_configure_lemp_in_debian_9/6.PNG)
 
 After checking,
 
-```
+```bash
 sudo systemctl stop nginx
 ```
 
 For reference, these are the nginx configuration files produced by Certbot:
 
-- `/etc/nginx/sites-available/default`
+`/etc/nginx/sites-available/default`
 
-```
+```nginx
 ##
 # You should look at the following URL's in order to grasp a solid understanding
 # of Nginx configuration files in order to fully unleash the power of Nginx.
@@ -222,9 +223,9 @@ server {
 }
 ```
 
-- `/etc/letsencrypt/options-ssl-nginx.conf`
+`/etc/letsencrypt/options-ssl-nginx.conf`
 
-```
+```nginx
 # This file contains important security parameters. If you modify this file
 # manually, Certbot will be unable to automatically provide future security
 # updates. Instead, Certbot will print and log an error message with a path to
@@ -240,9 +241,9 @@ ssl_prefer_server_ciphers on;
 ssl_ciphers "xxxxxx";
 ```
 
-- `/etc/letsencrypt/ssl-dhparams.pem`
+`/etc/letsencrypt/ssl-dhparams.pem`
 
-```
+```nginx
 -----BEGIN DH PARAMETERS-----
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 -----END DH PARAMETERS-----
@@ -252,31 +253,33 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 Assuming your app's `Dockerfile` contains a line similar to 
 
-`COPY ./path/to/my/html /usr/share/nginx/html`
+```docker
+COPY ./path/to/my/html /usr/share/nginx/html
+```
 
 then in `/etc/nginx/sites-enabled/default` on the host instance, replace
 
-```
+```nginx
 root /var/www/html;
-```
+``` 
 
 with 
 
-```
+```nginx
 root /usr/share/nginx/html;
 ```
 
 and set the server name
 
-```
+```nginx
 server_name <mydomain>;
 ```
 
-## Step 5
+## <a name="step-5"></a>Step 5
 
 Add the below lines to the app's `Dockerfile`
 
-```
+```docker
 RUN addgroup -g 1000 -S www-data \
 && adduser -u 1000 -D -S -G www-data www-data
 ```
@@ -287,27 +290,28 @@ and rebuild the Docker image.
 
 Run the new Docker image, with some extra options:
 
-```
+```bash
 --publish=443:443
 ```
 
-to open up port 443;
+to open up port `443`;
 
-```
+```bash
 --volume=/etc/letsencrypt/:/etc/letsencrypt/
 ```
 
 to get the certificates (and other required Let's Encrypt files) on the host 
 instance onto the container;
 
-```
+```bash
 --volume=/etc/nginx/:/etc/nginx/
 ```
 
 to ensure the container has the same Nginx configurations as the host instance.
 
-The last option is why in Step 5 the [`www-data` user needs creating.](http://blog.tobiasforkel.de/en/2016/09/10/nginx-docker-container-and-getpwnamwww-data-problem/)
+The last option is why in [**`Step 5`**](#step-5) the [`www-data` user needs creating.](http://blog.tobiasforkel.de/en/2016/09/10/nginx-docker-container-and-getpwnamwww-data-problem/)
 
 ## Step 7
 
-Navigate in the browser to \<mydomain\> (you should see your app running over HTTPS).
+Navigate in the browser to `<mydomain>`. You should see your app running over 
+HTTPS.

@@ -60,16 +60,14 @@ certbot/certbot \
 ### Step 3
 After following the prompts, you will be instructed to deploy a DNS text record
 
-```
-Please deploy a DNS TXT record under the name
-_acme-challenge.<my-domain> with the following value:
+`Please deploy a DNS TXT record under the name`
+`_acme-challenge.<my-domain> with the following value:`
 
-<value>
+`<value>`
 
-Before continuing, verify the record is deployed.
--------------------------------------------------------------------------------
-Press Enter to Continue
-```
+`Before continuing, verify the record is deployed.`
+`-------------------------------------------------------------------------------`
+`Press Enter to Continue`
 
 Go into the DNS configuration of your domain registrar and create a new record
 - Type: `TXT`
@@ -85,21 +83,21 @@ dig -t txt _acme-challenge.<my-domain>
 
 (in the answer section, look for something like below)
 
-```
-;; ANSWER SECTION:
-_acme-challenge.<my-domain>. 300 IN	TXT	<value>
-```
+`;; ANSWER SECTION:`
+
+`_acme-challenge.<my-domain>. 300 IN	TXT	<value>`
 
 This can sometimes take a while, but once it's done, press `Enter`
 
 If successful, you will see something like
 
-```
- - Congratulations! Your certificate and chain have been saved at:
-   ${CERTBOT_DIR}/live/<my-domain>/fullchain.pem
-   Your key file has been saved at:
-   ${CERTBOT_DIR}/live/<my-domain>/privkey.pem
-```
+`Congratulations! Your certificate and chain have been saved at:`
+
+`${CERTBOT_DIR}/live/<my-domain>/fullchain.pem`
+
+`Your key file has been saved at:`
+
+`${CERTBOT_DIR}/live/<my-domain>/privkey.pem`
 
 where `fullchain.pem` is the SSL certificate file and `privkey.pem` the SSL private key file.
 
