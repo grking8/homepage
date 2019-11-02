@@ -20,7 +20,7 @@ Uses template repository [test-website.](https://github.com/family-guy/test-webs
     * `bundle install`
     * `jekyll --version`
 - `cd /path/to/homepage`
-- `jekyll serve`
+- `jekyll serve --livereload`
 - Navigate to `http://localhost:4000` in the browser, you should see the landing page
 
 ### macOS

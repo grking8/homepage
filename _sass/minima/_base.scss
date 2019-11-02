@@ -75,6 +75,7 @@ img {
   position: relative;
   overflow: hidden;
   border-radius: 50%;
+  margin: 0 auto;
 }
 
 .image-center {
@@ -214,12 +215,10 @@ pre {
   @media screen and (min-width: $on-large) {
     max-width: -webkit-calc(#{$content-width} - (#{$spacing-unit} * 2));
     max-width:         calc(#{$content-width} - (#{$spacing-unit} * 2));
-    padding-right: $spacing-unit * 0.5;
-    padding-left: $spacing-unit * 0.5;
+    padding-right: $spacing-unit * 6;
+    padding-left: $spacing-unit * 6;
   }
 }
-
-
 
 /**
  * Clearfix
