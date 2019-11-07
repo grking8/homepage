@@ -177,8 +177,6 @@ blockquote {
 pre,
 code {
   @include relative-font-size(0.9375);
-  border: 1px solid $grey-color-light;
-  border-radius: 3px;
   background-color: #002b36;
   color: #fdf6e3;
   font-size: 14px;
@@ -193,7 +191,6 @@ pre {
   overflow-x: auto;
 
   > code {
-    border: 0;
     padding-right: 0;
     padding-left: 0;
   }
@@ -202,6 +199,7 @@ pre {
 .highlighter-rouge {
   color: #e83e8c;
   background-color: #ffffff;
+  font-size: 14px;
 }
 
 
