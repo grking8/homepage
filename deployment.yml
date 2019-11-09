@@ -1,0 +1,10 @@
+GCP_INSTANCE: homepage
+GCP_INSTANCE_MACHINE_TYPE: f1-micro
+GCP_CONTAINER_REGISTRY: gcr.io
+GCP_COMPUTE_ZONE: us-east1-b
+GCP_PROJECT_ID: testing-203707
+STATIC_DIR: _site
+CI_PROVIDER: circleci
+DOMAIN: guyrking.com
+GIT_USER_NAME: family-guy
+GIT_USER_EMAIL: grking8@gmail.com
