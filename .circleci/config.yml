@@ -35,11 +35,10 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Load environment variables
-          command: source bash__profile
-      - run:
           name: Build source files into HTML, CSS, and JS
-          command: deploy-scripts/build-website.sh
+          command: |
+            source bash__profile
+            deploy-scripts/build-website.sh
           environment:
             JEKYLL_ENV: production
       - save_cache:
