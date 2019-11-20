@@ -65,6 +65,11 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - vendor
+  - deployment.yml
+  - deploy-scripts
+  - CODE_OF_CONDUCT.md
+  - screenshot.png
+  - script
 url: "https://guyrking.com"
 plugins:
   - jemoji
