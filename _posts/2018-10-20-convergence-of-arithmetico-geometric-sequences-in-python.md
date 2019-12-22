@@ -3,6 +3,7 @@ layout: post
 title: Convergence Of Arithmetico - Geometric Sequences In Python
 author: familyguy
 comments: true
+tags: maths analysis sequences convergence
 ---
 
 {% include post-image.html name="pure_convergence1.jpg" width="75" height="75" 

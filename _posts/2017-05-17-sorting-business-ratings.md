@@ -9,11 +9,11 @@ comments: true
 
 You have an array of businesses. Each business has an ID
 
-$$ n \in \left[1 \,.\,.\, 10000\right] $$
+$$ n \in \left[1..10000\right] $$
 
 and a rating
 
-$$  m \in \left[1 \,.\,.\, 5\right] $$
+$$  m \in \left[1..5\right] $$
 
 In JavaScript, something like
                     
