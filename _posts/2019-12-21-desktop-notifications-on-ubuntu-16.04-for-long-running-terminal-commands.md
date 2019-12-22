@@ -9,7 +9,7 @@ tags: ubuntu terminal desktop-notifications
 {% include post-image.html name="cof_orange_hex_400x400.jpg" width="100" height="100" 
 alt="ubuntu logo" %}
 
-Install [undistract-me](https://github.com/jml/undistract-me):
+Install [undistract-me](https://github.com/jml/undistract-me)
 
 ```bash
 sudo apt-get install undistract-me
