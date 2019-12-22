@@ -12,11 +12,12 @@ alt="lattice of divisibility" %}
 A common rule for checking whether an integer is divisible by `3` is to consider
 the sum of its digits.
 
-For example, `12345` is divisible by `3` because `1 + 2 + 3 + 4 + 5 = 15`.
+For example, `12345` is divisible by `3` because `1 + 2 + 3 + 4 + 5 = 15`,
+and `15` is divisible by `3`.
 
 Similarly, `123456` is divisible by `3` and `1234567` is not.
 
-In the above, we are saying if the sum of an integer's digits is divisible 
+Above, we are saying if the sum of an integer's digits is divisible 
 by `3`, then the integer is divisible by `3`.
 
 What about the reverse implication, i.e. if an integer is divisible by `3`, 
@@ -31,14 +32,14 @@ Similary, `3 x 234829042390482 = 704487127171446` is divisible by `3` and
 by 3.
 
 If both implications are true, this means the set of integers that are divisble
-by `3` is **exactly the same set** of integers whose sum of digits is divisible 
+by `3` is **exactly the same set of integers** whose sum of digits is divisible 
 by `3`.
 
 In other words, 
 it is impossible to find an integer that is divisible by `3` whose sum of
 its digits is not divisible by `3` or vice versa.
 
-To _partially_ check if this is true in Python,
+To "approximately" check if this is true in Python,
 
 ```python
 def get_sum_of_digits(n):
@@ -59,11 +60,15 @@ while True:
 
 Which for me ran until `i = 6624839` before I quit the script.
 
-Unfortunately, this is only a partial verification. As the set of integers
-is infinite, it would take us an infinity to check our hypothesis is true
+Unfortunately, whilst we can check our double implication
+is true for an arbitrarily large number of integers,
+we cannot check it in its full form.
+
+As the set of integers
+is infinite, it would take us an infinity to check 
 using the method above!
 
-However, we can verify our hypothesis mathematically:
+However, we can achieve the above using mathematical logic:
 
 $Let\;n\;\in\;\mathbb{N}.$
 
@@ -219,10 +224,12 @@ $$
 
 thus by induction, $\mathcal{P}(n)$, $n \in \mathbb{N}$, QED.
 
-We have showed $(*)$ is true for $p=3$. Is $(*)$ true for all $p$?
+We have showed $(*)$ is true for $p=3$.
+
+Is $(*)$ true for all $p$?
 
 No, for $p=2$ and $n=10$, we have $10 \mod 2 =0$ but $\varphi(10) \mod 2 =1$.
 
 Are there any other $p$ for which $(*)$ is true? 
 
-If so, how would changing the base from ten affect this?
+How would changing the base from ten affect any results?
