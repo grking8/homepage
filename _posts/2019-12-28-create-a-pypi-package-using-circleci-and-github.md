@@ -3,7 +3,7 @@ layout: post
 title: Create a PyPI Package Using CircleCI and GitHub
 author: familyguy
 comments: true
-tags: python pypi pypi-package python-library python-package
+tags: python pypi pypi-package python-library python-package circleci github ci continuous-integration
 ---
 
 {% include post-image.html name="language-2024210_1280.png" width="100" height="100" 
