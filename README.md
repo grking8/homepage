@@ -21,7 +21,6 @@ docker run --name homepage-dev --publish 4000:4000 --publish 35729:35729 \
 - Navigate to `http://localhost:4000`, you should see the site running
 - The site should update automatically after updates to source files (the first
   change might require a manual refresh in the browser)
-- To remove all stopped containers, `docker container prune`
 
 ## Documentation
 
