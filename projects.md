@@ -56,6 +56,6 @@ order: 3
     **Early-stage quantitative FX hedge fund**
     
     _Python, pandas, scipy, MySQL, AWS EC2, GitLab CI/CD, Docker, GCP,
-    Let's Encrypt_
+    Let's Encrypt, Webpack_ 
     
     [company website](https://zorncapital.com)

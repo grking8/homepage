@@ -23,4 +23,4 @@ RUN bundle update
 
 EXPOSE 35729
 EXPOSE 4000
-CMD ["jekyll", "serve", "--force_polling", "--livereload", "--host", "0.0.0.0"]
+CMD ["sh", "-c", "cp /gem/Gemfile.lock /homepage/ && jekyll serve --force_polling --livereload --host 0.0.0.0"]

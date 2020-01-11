@@ -15,7 +15,7 @@ Uses template repository [test-website.](https://github.com/family-guy/test-webs
 
 ```docker
 docker run --name homepage-dev --publish 4000:4000 --publish 35729:35729 \
---volume /path/to/homepage:/homepage homepage-dev
+--volume /path/to/homepage:/homepage --rm homepage-dev
 ```
 
 - Navigate to `http://localhost:4000`, you should see the site running
