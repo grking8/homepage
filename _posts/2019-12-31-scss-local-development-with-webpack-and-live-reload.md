@@ -6,7 +6,7 @@ comments: true
 tags: webpack live-reload docker local-development
 ---
 
-{% include post-image.html name="javascript-2189147_960_720.png" width="120" height="90" 
+{% include post-image.html name="2000px-Sass_Logo_Color.svg.png" width="120" height="100" 
 alt="sass logo" %}
 
 If you have SCSS files in your project that you wish to work with during 
