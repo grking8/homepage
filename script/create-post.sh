@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+set -xe
+
 TITLE=$1
 IMAGE_PATH=$2
 IMAGE_FILE=$(basename $IMAGE_PATH)
