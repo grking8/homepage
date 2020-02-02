@@ -1,9 +1,8 @@
 ---
 layout: page
 title: Archive
-page_title: ARCHIVE
+page_title: Archive
 permalink: /archive/
-order: 2
 years:
 - 2019
 - 2018

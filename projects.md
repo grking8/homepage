@@ -1,10 +1,16 @@
 ---
 layout: page
 title: Projects
-page_title: PROJECTS
+page_title: Projects
 permalink: /projects/
-order: 3
 ---
+
+    
+## Contributor
+
+- ### [pytube](https://github.com/nficano/pytube)
+    - Handle age restricted and live videos
+    - Extract video metadata
 
 ## Owner
 
@@ -36,13 +42,38 @@ order: 3
     [wiki, ](https://family-guy.github.io/aiostorage-wiki/)
     [documentation, ](http://aiostorage.readthedocs.io/)
     [source](https://github.com/family-guy/aiostorage)
-    
-## Contributor
 
-- [pytube](https://github.com/nficano/pytube)
-    - Handle age restricted and live videos
-    - Extract video metadata
+- ### mathdruck 
 
+    **LaTeX web application**
+
+    _Angular 4, Karma, PhantomJS, Jasmine, MathJax, Bootstrap_
+
+    _Laravel, MySQL_
+
+    _AWS EC2_
+
+    [source (frontend)](https://github.com/grking8/mathdruck-ng1)
+
+    [source (backend)](https://github.com/grking8/mathdruck-rest)
+
+- ### cms
+
+    **CMS for technical blog posts**
+
+    _PHP, MySQL, Apache, TinyMCE, MathJax, Google Code Prettify_
+
+    _AWS EC2_
+
+    [source](https://github.com/grking8/web-cms)
+
+- ### linear algebra
+
+    **Linear algebra CLI**
+
+    _C++_
+
+    [source](https://github.com/grking8/linear-algebra)
 <br />
 
 ***
@@ -55,7 +86,7 @@ order: 3
 
     **Early-stage quantitative FX hedge fund**
     
-    _Python, pandas, scipy, MySQL, AWS EC2, GitLab CI/CD, Docker, GCP,
-    Let's Encrypt, Webpack_ 
+    _Python, pandas, scipy, MySQL, AWS EC2, GitLab CI/CD, Docker, 
+    GCP Compute Engine, Let's Encrypt, Webpack_ 
     
     [company website](https://zorncapital.com)
