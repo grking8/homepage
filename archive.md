@@ -4,6 +4,7 @@ title: Archive
 page_title: Archive
 permalink: /archive/
 years:
+- 2020
 - 2019
 - 2018
 - 2017
