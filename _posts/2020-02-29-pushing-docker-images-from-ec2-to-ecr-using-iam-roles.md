@@ -118,7 +118,7 @@ In the ECR console, create a repository `ec2-ecr-test`.
 ### Create an IAM policy
 
 In the IAM console, create a policy `ECRContainerise` with description `"Allows
-Docker images to be built and pushed to ECR repository 'ec2-ecr-test'"` using the JSON
+Docker images to be built and pushed to the ECR repository ec2-ecr-test"` using the JSON
 
 ```json
 {

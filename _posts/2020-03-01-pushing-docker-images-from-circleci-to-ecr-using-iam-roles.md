@@ -3,7 +3,7 @@ layout: post
 title: Pushing Docker Images from CircleCI to ECR using IAM Roles
 author: familyguy
 comments: true
-tags:
+tags: aws circleci sts boto3 python ecr iam iam-roles docker
 ---
 
 {% include post-image.html name="lock-4529981_960_720.webp" width="100" height="100" alt="" %}
