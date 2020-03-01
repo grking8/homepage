@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Pushing Docker images from EC2 to ECR using IAM Roles
+title: Pushing Docker Images from EC2 to ECR using IAM Roles
 author: familyguy
 comments: true
 tags: aws ec2 ecr iam iam-roles docker
@@ -118,7 +118,7 @@ In the ECR console, create a repository `ec2-ecr-test`.
 ### Create an IAM policy
 
 In the IAM console, create a policy `ECRContainerise` with description `"Allows
-Docker images to be built and pushed to ECR"` using the JSON
+Docker images to be built and pushed to ECR repository 'ec2-ecr-test'"` using the JSON
 
 ```json
 {
