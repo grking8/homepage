@@ -14,7 +14,7 @@ The IAM role we used had EC2 as a trusted entity which meant our EC2 instance co
 interact with ECR without explicitly storing any credentials.
 
 The credentials used implicitly were also temporary, as supposed to the long
-term credentials of an IAM user with programmatic credentials.
+term credentials of an IAM user with programmatic access.
 
 In this post, we ask: Can we push a Docker image from CircleCI (instead of EC2) to
 ECR using an IAM role?
@@ -48,7 +48,7 @@ implementation using IAM roles might look.
 
 Same as in the [previous post](https://guyrking.com/2020/02/29/pushing-docker-images-from-ec2-to-ecr-using-iam-roles.html) except:
 
-- Replace our EC2 instance with a server that spins up as during a CircleCI build
+- Replace our EC2 instance with a server that spins up during a CircleCI build
 - In our `containerise` role, change the trusted entity from an EC2 instance to an IAM user
 - The IAM user has no permissions, but has programmatic access
 - Get the IAM user to assume the `containerise` role via the 
