@@ -46,13 +46,12 @@ permalink: /grades/
 <br>
 # High School
 
-| Year| Qualification | Course Title | Grade | Max | % | 
+| Year| Qualification | Course Title | Grade[^1] | Max | % | 
 |:------:|:-----------:|:--------------|---:|---:|---:|
 | 2002 | A-level  | English Literature    | A | A | 89 |
 | 2002 | A-level  | History               | A | A | 85 |
 | 2002 | A-level  | Economics             | A | A | 96 |
 | 2001 | AS-level | Government & Politics | A | A | 93 |
 {:.mbtablestyle}
-<br>
-<br>
+[^1]: A* (post-2009) in English Literature, Economics
 <a href="#top">Back to top</a>
