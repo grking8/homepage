@@ -51,7 +51,7 @@ _Alternatively, you could create an IAM role and make certain IAM users in the t
 AWS account trusted entities for that role._
 
 Because they are trusted entities, those users
-can assume the role, giving them the authorisation to make AWS API calls to 
+can assume the role, giving them the authorisation to make certain AWS API calls to 
 access your resources.
 
 #### Custom EC2 application
@@ -67,7 +67,7 @@ You could then use the AWS CLI or an AWS SDK, e.g. Boto3, with those credentials
 _Alternatively, you could create an IAM role and associate that role with your EC2 instance, making
 the instance a trusted entity._
 
-Because the instance is a trusted entity, any API calls via the AWS CLI or AWS SDK 
+Because the instance is a trusted entity, certain API calls via the AWS CLI or AWS SDK 
 on the instance are authorised,
 allowing the instance to interact with ECR.
 
@@ -75,20 +75,20 @@ allowing the instance to interact with ECR.
 
 #### Scalability
 
-Imagine in the SaaS example, you use not one provider but 10.
+Imagine in the SaaS example, you use not one provider but ten.
 
 Each provider needs the same authorisation. 
 
-Using IAM roles leads to the creation of one IAM role with 10 trusted entities.
+Using IAM roles leads to the creation of one IAM role with ten trusted entities.
 
-Using IAM users leads to the creation of 10 IAM users*
+Using IAM users leads to the creation of ten IAM users*
 
-What if you used 100 providers, or a 1000? It is a silly example, but it shows using IAM
+What if you used a hundred providers, or a thousand? It is a silly example, but it shows using IAM
 roles is more scalable.
 
-*You could create just one IAM user and give the same credentials to all the providers.
+*You could create one IAM user and give the same credentials to all the providers.
 What happens if you stop using a provider? You could rotate the credentials and inform 
-the remaining providers. Alternatively, with a separate user for each provider, 
+the remaining providers. With a separate user for each provider though, 
 you would simply delete the stopped provider's user.
 
 #### Security 
@@ -106,7 +106,7 @@ which is probably something you want to avoid.
 
 Okay enough talking, let's make things more concrete with an example.
 
-We want to push an image on an EC2 instance to an ECR respository.
+We want to push a Docker image on an EC2 instance to an ECR respository.
 
 We are going to do this using an IAM role, rather than an IAM user. 
 In what follows, the AWS region is `us-east-1` (North Virginia).
@@ -118,7 +118,7 @@ In the ECR console, create a repository `ec2-ecr-test`.
 ### Create an IAM policy
 
 In the IAM console, create a policy `ECRContainerise` with description `"Allows
-Docker images to be built and pushed to the ECR repository ec2-ecr-test"` using the JSON
+Docker images to be built and pushed to the ECR repository ec2-ecr-test"` using this JSON
 
 ```json
 {
