@@ -6,7 +6,7 @@ comments: true
 tags: aws circleci sts boto3 python ecr iam iam-roles docker
 ---
 
-{% include post-image.html name="lock-4529981_960_720.webp" width="100" height="100" alt="" %}
+{% include post-image.html name="lock-4529981_960_720.webp" width="100" height="100" alt="security padlock" %}
 
 In the [previous post](https://guyrking.com/2020/02/29/pushing-docker-images-from-ec2-to-ecr-using-iam-roles.html), we pushed a Docker image from EC2 to ECR using an IAM role.
 
