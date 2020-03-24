@@ -15,7 +15,7 @@ They offer a modern, superior alternative to older solutions like running Cron j
 
 In this post, we will run Python code on a schedule using AWS Lambda.
 
-The main tool we will be using is the AWS Serverless Application Model Comamnd Line Interface (SAM CLI).
+The main tool we will be using is the AWS Serverless Application Model Command Line Interface (SAM CLI).
 
 To make our example more practical, our Python code will use third party libraries.
 
@@ -143,7 +143,7 @@ one in which it will be deployed.
 In other words, we would like our local development environment to resemble as much as possible the AWS 
 environment in the cloud in which Lambda functions run.
 
-This is one area in which SAM is valuable, as it enables you to run code locally in a Docker container
+This is one advantage of SAM as it enables you to run code locally in a Docker container
 that replicates the AWS Lambda environment.
 
 ### Prerequisites
@@ -287,7 +287,7 @@ Check we are using Python in the virtual environment and that its version is `3.
 
 Check the SAM CLI is installed `sam --version`.
 
-Create environment variables for the SAM CLI Export the AWS credentials
+Create environment variables for the SAM CLI
 
 - `export AWS_ACCESS_KEY_ID=<access-key-id>`
 - `export AWS_SECRET_ACCESS_KEY=<secret-access-key>`
@@ -380,7 +380,7 @@ Download `pyquery` and `requests`
 `sam build --template config/template.yml --manifest requirements.txt`
 
 In `/my/local/path/scheduled-task/.aws-sam/build` 
-you should our project files copied over with all third party dependencies.
+you should see the project files copied over with all third party dependencies.
 
 Invoke the Lambda function
 
@@ -408,15 +408,15 @@ which should output something like
 
 `Language: Polski`
 
-NB: each time you make changes to the code you need to build again so the command becomes
+NB: each time you make changes to the code you need to build again, i.e.
 
 `sam build --template config/template.yml --manifest requirements.txt && sam local invoke ScheduledTask --event event.json --template .aws-sam/build/template.yaml --skip-pull-image`
 
 ## Deploy to production
 
-First, package up the lambda function.
+First, package up the Lambda function.
 
-This takes your code and dependencies and pushes it to S3 bucket
+This takes your code and dependencies and pushes it to our S3 bucket.
 
 Another win for SAM users is the automation around zipping up the Lambda function and pushing it to the S3 bucket. The sam package command zips up your code and artifacts, pushes them to S3 and outputs a modified SAM template ready for deployment via CloudFormation
 
