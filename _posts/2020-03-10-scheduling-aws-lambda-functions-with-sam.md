@@ -414,30 +414,42 @@ NB: each time you make changes to the code you need to build again, i.e.
 
 ## Deploy to production
 
-First, package up the Lambda function.
-
-This takes your code and dependencies and pushes it to our S3 bucket.
-
-Another win for SAM users is the automation around zipping up the Lambda function and pushing it to the S3 bucket. The sam package command zips up your code and artifacts, pushes them to S3 and outputs a modified SAM template ready for deployment via CloudFormation
-
-Run the command
+### Package files for S3
 
 `sam package --template-file .aws-sam/build/template.yaml --output-template-file packaged.yml --s3-bucket <aws-account-id>-lambda-scheduled-task`
 
-can see the new output file `packages.yml` which is basically the same as `template.yml` except the codeUR
-points to S3 bucket object.
+zips up the files in `.aws-sam/build/ScheduledTask` and uploads them to the S3 bucket 
+`<aws-account-id>-lambda-scheduled-task`. 
 
-In s3, can check the bucket now has a new object.
+You should see a new file in the S3 bucket; this file contains all the information required to run the Lambda function.
 
-Deploy
+The command also creates a new template file `packaged.yml` which is the same as `.aws-sam/build/template.yaml` except 
+`CodeUri` points to the new file in the S3 bucket. `packaged.yml` will be used in the next step.
+
+### Deploy 
+
+The final step is to use the SAM CLI to create the necessary resources in AWS for the Lambda function to run:
 
 `sam deploy --template-file packaged.yml --stack-name scheduled-task --capabilities CAPABILITY_IAM`
 
-Should see the Lambda function in Lambda console. And should see it invoke every 3 minutes with the same
-logs as when run locally but now in the CloudWatch console.
+Under the hood, this creates a CloudFormation stack `scheduled-task` which in turn creates the Lambda function.
+
+If you get an IAM permissons error, update the IAM policy `LambdaSAMSchedule` accordingly.
+
+If the command is successful, you should see the Lambda function invoked every three minutes (you can check this in 
+the Lambda or CloudWatch console).
+
+In the CloudWatch console, you should also see the invoked Lambda function's logs (which should mirror those when the
+Lambda function ran locally).
 
 ## Clean up
 
-- S3 
-- IAM
-- CloudFormation
+In the AWS console:
+
+- Remove S3 bucket `<aws-account-id>-lambda-scheduled-task`
+- Remove IAM policy `LambdaSAMSchedule`
+- Remove IAM user `local-sam`
+- Remove CloudFormation stack `scheduled-task`
+- Remove CloudWatch log group `/aws/lambda/scheduled-task-ScheduledTask-<id>`
+
+On your local machine, remove the directory `/my/local/path/scheduled-task`.
