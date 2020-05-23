@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 set -e
 
@@ -6,7 +6,7 @@ TITLE=$1
 IMAGE_PATH=$2
 IMAGE_FILE=$(basename $IMAGE_PATH)
 DATE=$(date +'%Y-%m-%d')
-TITLE_WITH_DASHES=$(echo "${TITLE}" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+TITLE_WITH_DASHES=$(echo "${TITLE}" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | tr '/' '-')
 TITLE_WITH_DASHES_WITHOUT_COMMAS="${TITLE_WITH_DASHES//,}"
 IMAGE_DIR="assets/images/posts/${DATE}-${TITLE_WITH_DASHES_WITHOUT_COMMAS}/"
 mkdir $IMAGE_DIR
