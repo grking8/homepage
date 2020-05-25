@@ -9,10 +9,10 @@ tags: lets-encrypt certbot ssl-certificates docker
 {% include post-image.html name="download.png" width="300" height="200" 
 alt="lets encrypt logo" %}
 
-This post describes how to download Let's Encrpt SSL files onto your 
+This post describes how to download Let's Encrypt SSL files onto your 
 local machine using the `certbot` command line tool.
 
-It assumes you have Docker installed. If you don't have Docker, you
+It assumes you have Docker installed. If you don't, you
 can install `certbot` directly and adapt the 
 instructions in this post accordingly.
 
@@ -27,16 +27,12 @@ instructions in this post accordingly.
 Set the directory that `certbot` 
 will output the SSL files to inside the Docker container
 
-```bash
-export CERTBOT_DIR=/opt/certbot/my-output
-```
+`export CERTBOT_DIR=/opt/certbot/my-output`
 
 and the directory where you would like the files to go on your 
 local machine
 
-```bash
-export LOCAL_CERTBOT_DIR=/path/to/local/folder
-```
+`export LOCAL_CERTBOT_DIR=/path/to/local/folder`
 
 ### Step 2
 Run the `certbot` command via Docker to download the SSL files 
@@ -45,7 +41,7 @@ Run the `certbot` command via Docker to download the SSL files
 ```bash
 docker run --interactive --tty --volume $LOCAL_CERTBOT_DIR:$CERTBOT_DIR  \
 certbot/certbot \
-    -d <my-domain> 
+    -d <my-domain> \
     --manual \
     --agree-tos \
     --manual-public-ip-logging-ok \
@@ -74,12 +70,17 @@ Go into the DNS configuration of your domain registrar and create a new record
 - Name: `_acme-challenge`
 - Value: `<value>`
 
+Depending on your DNS provider, the name might be `_acme-challenge` or 
+`_acme-challenge.<my-domain>` for Apex domains. If `<my-domain>` is a subdomain,
+e.g. `www.example.com`, the name could be `_acme-challenge.www` or 
+`_acme-challenge.www.example.com`
+
 ### Step 4
 Verify the record has been added 
 
-```bash
-dig -t txt _acme-challenge.<my-domain>
-``` 
+`dig -t txt _acme-challenge.<my-domain>`
+
+For example, `dig -t txt _acme-challenge.www.example.com`
 
 (in the answer section, look for something like below)
 
@@ -104,8 +105,6 @@ where `fullchain.pem` is the SSL certificate file and `privkey.pem` the SSL priv
 ### Step 5
 Check the SSL files are available locally 
 
-```bash
-ls $LOCAL_CERTBOT_DIR/live/<my-domain>
-``` 
+`ls $LOCAL_CERTBOT_DIR/live/<my-domain>` 
 
 (you might have to change to superuser first `sudo su`)
