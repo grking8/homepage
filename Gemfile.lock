@@ -95,7 +95,6 @@ DEPENDENCIES
   jekyll-feed
   jekyll-seo-tag
   jekyll-sitemap
-  jekyll-watch
   jemoji (= 0.10.2)
   minima!
 
