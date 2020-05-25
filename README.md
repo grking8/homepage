@@ -1,6 +1,6 @@
 ## Summary
 
-Personal homepage / blog using the [Jekyll theme minima.](https://jekyll.github.io/minima/)
+Personal website and blog using the [Jekyll theme minima.](https://jekyll.github.io/minima/)
 
 Uses template repository [test-website.](https://github.com/family-guy/test-website)
 

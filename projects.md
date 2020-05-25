@@ -23,9 +23,9 @@ permalink: /projects/
     [wiki, ](https://github.com/family-guy/test-website/wiki)
     [source](https://github.com/family-guy/test-website) 
 
-- ### homepage
+- ### personal blog
     
-    **Personal homepage and blog using static website template ^^^**
+    **Personal website and blog using static website template ^^^**
     
     _Jekyll, CircleCI, Docker, GCP Container Registry, GCP Compute Engine, Let's Encrypt_
 
