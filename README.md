@@ -1,6 +1,6 @@
 ## Summary
 
-Personal homepage / blog using the [Jekyll theme minima.](https://jekyll.github.io/minima/)
+Personal website and blog using the [Jekyll theme minima.](https://jekyll.github.io/minima/)
 
 Uses template repository [test-website.](https://github.com/family-guy/test-website)
 
@@ -19,6 +19,7 @@ docker run --name homepage-dev --publish 4000:4000 --publish 35729:35729 \
 - Navigate to `http://localhost:4000`, you should see the site running
 - The site should update automatically after updates to source files (the first
   change might require a manual refresh in the browser)
+- To stop the Docker container, `docker container stop homepage-dev`
 
 ## Documentation
 

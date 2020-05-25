@@ -100,15 +100,11 @@ required to run Webpack __without downloading any of them.__
 
 First, build the Docker image
 
-```bash
-docker build --tag scss-website-dev-bootstrap . --file Dockerfile.bootstrap
-```
+`docker build --tag scss-website-dev-bootstrap . --file Dockerfile.bootstrap`
 
 then run it
 
-```bash
-docker run --name scss-website-dev-bootstrap --volume $(pwd):/scss-website --rm scss-website-dev-bootstrap
-```
+`docker run --name scss-website-dev-bootstrap --volume $(pwd):/scss-website --rm scss-website-dev-bootstrap`
 
 There should now be a `package.json` in the project root with the required dependencies as  
 specified in `Dockerfile.bootstrap`.
@@ -192,9 +188,7 @@ CMD ["webpack-dev-server", "--mode development", "--color"]
 
 Ensure in `package.json` there is no `/usr/local/bin/node` dependency. Then
 
-```bash
-docker build --tag scss-website-dev . --file Dockerfile.dev
-```
+`docker build --tag scss-website-dev . --file Dockerfile.dev`
 
 ## Test local development
 

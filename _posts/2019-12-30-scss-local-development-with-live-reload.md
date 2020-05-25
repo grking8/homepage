@@ -100,10 +100,8 @@ CMD ["live-server", "--port=8000", "--host=0.0.0.0"]
 
 then build the Docker files into images
 
-```bash
-docker build --tag scss-website-dev-scss . --file Dockerfile.dev-scss
-docker build --tag scss-website-dev-server . --file Dockerfile.dev-server
-```
+- `docker build --tag scss-website-dev-scss . --file Dockerfile.dev-scss`
+- `docker build --tag scss-website-dev-server . --file Dockerfile.dev-server`
 
 ## Test local development
 

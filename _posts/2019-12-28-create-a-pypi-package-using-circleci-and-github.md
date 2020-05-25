@@ -37,9 +37,7 @@ If you have done any real world programming with Python, you most likely have us
 
 For example, the PyPI package `requests`, which you might have installed like this
 
-```bash
-pip install requests
-```
+`pip install requests`
 
 and used in code like this
 
@@ -140,9 +138,7 @@ replaced with underscores; otherwise set `<python-package>` equal to `<my-name>`
 
 ### Effect on end user
 
-```bash
-pip install <pypi-distribution>
-```
+`pip install <pypi-distribution>`
 
 ```python
 import <python-package>
@@ -150,9 +146,7 @@ import <python-package>
 
 `<pypi-distribution>` and `<python-package>` are not always the same, e.g. 
 
-```bash
-pip install beautifulsoup4
-```
+`pip install beautifulsoup4`
 
 ```python
 import bs4

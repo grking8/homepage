@@ -51,9 +51,7 @@ machine, using Docker means you can easily:
 To run Nginx in a Docker container and serve requests on 
 port 8000 on your machine,
 
-```bash
-docker run --interactive -tty --publish 8000:80 nginx bash
-```
+`docker run --interactive -tty --publish 8000:80 nginx bash`
 
 (if you are on macOS, you might have to start the
 Docker daemon first by clicking on an icon)
@@ -62,25 +60,19 @@ This command also SSHs you into the container.
 
 In the container shell, check Nginx is installed 
 
-```bash
-which nginx
-```
+`which nginx`
 
 `/usr/sbin/nginx`
 
 and that it is running
 
-```bash
-service nginx status
-```
+`service nginx status`
 
 `[FAIL] nginx is not running ... failed!`
 
 As it is not running, start it
 
-```bash
-service nginx start; service nginx status
-```
+`service nginx start; service nginx status`
 
 `[ ok ] nginx is running.`
 
@@ -119,18 +111,14 @@ We will install Vim, but any text editor will do.
 
 Inside the container shell,
 
-```bash
-apt-get update
-apt-get install vim --yes
-```
+- `apt-get update`
+- `apt-get install vim --yes`
 
 We can now use our text editor to have a look at the Nginx
 configuration
 
-```bash
-cd /etc/nginx/conf.d
-vi default.conf
-```
+- `cd /etc/nginx/conf.d`
+- `vi default.conf`
 
 You should see the following configuration or similar
 
@@ -189,9 +177,7 @@ Change `index.html` so that the title and header reads
 
 To let the changes take effect, restart Nginx
 
-```bash
-service nginx reload
-```
+`service nginx reload`
 
 When you make a request to `http://localhost:8000`, you should
 see the new title and header.
@@ -284,9 +270,7 @@ server {
 
 to the end of `default.conf`. To make the changes take effect,
 
-```bash
-service nginx reload
-```
+`service nginx reload`
 
 Now, making the same request in Python, we get a response
 status code of `403` with content

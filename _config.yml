@@ -17,7 +17,7 @@ seo:
     - https://uk.linkedin.com/in/guy-king-76454b190
     - https://github.com/grking8
 description: > # this means to ignore newlines until "github_username:"
-  Personal homepage and blog
+  Personal website and blog
 
 github_username:  grking8
 facebook_username: dairy.myriad
@@ -72,6 +72,13 @@ exclude:
   - CODE_OF_CONDUCT.md
   - screenshot.png
   - script
+  - assets/_sass/vendor
+  - assets/fonts
+  - assets/scripts
+  - .sass-cache
+  - config.codekit
+  - .codekit-cache
+  - .DS_Store
 url: "https://guyrking.com"
 plugins:
   - jemoji

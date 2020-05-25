@@ -125,7 +125,6 @@ Docker images to be built and pushed to the ECR repository ec2-ecr-test"` using 
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "VisualEditor0",
             "Effect": "Allow",
             "Action": [
                 "ecr:PutLifecyclePolicy",
@@ -146,13 +145,11 @@ Docker images to be built and pushed to the ECR repository ec2-ecr-test"` using 
             "Resource": "arn:aws:ecr:us-east-1:<aws-account-id>:repository/ec2-ecr-test"
         },
         {
-            "Sid": "VisualEditor1",
             "Effect": "Allow",
             "Action": "ecr:GetAuthorizationToken",
             "Resource": "*"
         },
         {
-            "Sid": "VisualEditor2",
             "Effect": "Allow",
             "Action": "ecr:BatchCheckLayerAvailability",
             "Resource": "arn:aws:ecr:us-east-1:<aws-account-id>:repository/ec2-ecr-test"
