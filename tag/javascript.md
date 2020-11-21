@@ -1,5 +1,1 @@
----
-layout: tagpage
-title: "Tag: javascript"
-tag: javascript
----
+$---\nlayout: tagpage\ntitle: "Tag: javascript"$\ntag: javascript$\n---
