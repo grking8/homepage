@@ -1,5 +1,1 @@
----
-layout: tagpage
-title: "Tag: react"
-tag: react
----
+$---\nlayout: tagpage\ntitle: "Tag: react"$\ntag: react$\n---
