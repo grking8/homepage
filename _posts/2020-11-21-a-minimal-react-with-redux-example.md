@@ -173,7 +173,7 @@ Container `<div>` for the React app.
 
 `src/index.js`
 
-```javascript
+```jsx
 import { App } from "./components/App";
 
 ReactDOM.render(<App />, document.getElementById("root"));
@@ -185,7 +185,7 @@ Mount the root component to the correct part of the DOM.
 
 `src/components/App.js`
 
-```javascript
+```jsx
 import { Courses } from "./Courses";
 import { Dishes } from "./Dishes";
 
@@ -210,7 +210,7 @@ Course selected state passed down to `<Courses />` and `<Dishes />` components.
 
 `src/components/Courses.js`
 
-```javascript
+```jsx
 export const Courses = ({ course, onSelectCourse }) => {
   return (
     <>
@@ -234,7 +234,7 @@ export const Courses = ({ course, onSelectCourse }) => {
 
 `src/components/Dishes.js`
 
-```javascript
+```jsx
 const STARTERS = [
   "Choice Duck & Liver Parfait with Red Onion Jam",
   "Prawn & Avocado Cocktail",
@@ -362,7 +362,7 @@ Load extra dependencies for Redux.
 
 `src/index.js`
 
-```javascript
+```jsx
 import { App } from "./components/App";
 
 const initialState = { course: "starter" };
@@ -399,7 +399,7 @@ receives. This is the only way to update the state tree.
 
 `src/actions.js`
 
-```javascript
+```jsx
 export const selectCourse = (payload) => {
   return { type: "courseSelected", payload };
 };
@@ -414,7 +414,7 @@ containing values to update the state tree with.
 
 `src/components/App.js`
 
-```javascript
+```jsx
 import Courses from "./Courses";
 import Dishes from "./Dishes";
 
@@ -434,7 +434,7 @@ Note the default imports as supposed to named imports.
 
 `src/components/Courses.js`
 
-```javascript
+```jsx
 import { selectCourse } from "../actions";
 
 const Courses = ({ course, onSelectCourse }) => {
@@ -487,7 +487,7 @@ The nuts and bolts of Redux:
 
 `src/components/Dishes.js`
 
-```javascript
+```jsx
 const STARTERS = [
   "Choice Duck & Liver Parfait with Red Onion Jam",
   "Prawn & Avocado Cocktail",

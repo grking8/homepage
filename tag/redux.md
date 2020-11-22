@@ -1,1 +1,5 @@
-$---\nlayout: tagpage\ntitle: "Tag: redux"$\ntag: redux$\n---
+---
+layout: tagpage
+title: "Tag: redux"
+tag: redux
+---

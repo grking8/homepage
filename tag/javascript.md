@@ -1,1 +1,5 @@
-$---\nlayout: tagpage\ntitle: "Tag: javascript"$\ntag: javascript$\n---
+---
+layout: tagpage
+title: "Tag: javascript"
+tag: javascript
+---
