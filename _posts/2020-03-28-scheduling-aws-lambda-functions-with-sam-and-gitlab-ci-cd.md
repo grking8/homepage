@@ -3,7 +3,7 @@ layout: post
 title: Scheduling AWS Lambda Functions with SAM and GitLab CI/CD
 author: familyguy
 comments: true
-tags:
+tags: aws lambda sam python cron schedule sam-cli docker faas ci gitlab
 ---
 
 {% include post-image.html name="download-lambda.png" width="100" height="100" alt="" %}
