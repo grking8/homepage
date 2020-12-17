@@ -3,11 +3,12 @@ FROM ubuntu:latest
 ARG PROJECT_DIR="/homepage"
 ARG GEM_DIR="/gem"
 
+RUN apt clean && rm -rf /var/lib/apt/lists/*
 RUN apt-get update
 RUN apt-get upgrade --yes --fix-missing
 RUN apt-get install --yes --fix-missing ruby-full build-essential zlib1g-dev git
-RUN gem install jekyll -v 3.8.7 
-RUN gem install bundler -v 2.1.2
+RUN gem install jekyll 
+RUN gem install bundler
 RUN gem update --system
 
 COPY Gemfile $GEM_DIR/
@@ -23,4 +24,4 @@ RUN bundle update
 
 EXPOSE 35729
 EXPOSE 4000
-CMD ["sh", "-c", "cp /gem/Gemfile.lock /homepage/ && jekyll serve --watch --livereload --host 0.0.0.0"]
+CMD ["sh", "-c", "cp /gem/Gemfile.lock /homepage/ && bundle exec jekyll serve --force_polling --livereload --host 0.0.0.0"]
