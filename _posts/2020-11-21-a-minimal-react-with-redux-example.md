@@ -95,7 +95,7 @@ _Course selected is thus application state._
 
 In the next section, we will see an implementation where the course selected in
 the `<Courses />` component is lifted up to the parent component and passed down
-to the `<Dishes />` component, i.e. without Redux.
+to the `<Dishes />` and `<Courses />` components, i.e. without Redux.
 
 In the section after that, we will see an implementation where the course
 selected is managed by Redux [(Take me straight there).](#with-redux)

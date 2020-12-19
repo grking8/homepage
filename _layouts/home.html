@@ -3,39 +3,36 @@ layout: default
 ---
 
 <div class="home">
-
-    
-    <main class="page-content" aria-label="Content">
-
-            {% for file in site.static_files %}
-                {% if file.path == site.headshot %}
-                    {% include headshot.html image=file.path %}
-                {% endif %}
-            {% endfor %}
-            Hello!
-            <br />
-            <br />
-            I am a software developer from the UK, working primarily in web and cloud computing.
-            <br />
-            <br />
-            My current employer is <a href="https://lambertlabs.com">Lambert Labs.</a>
-            <br />
-            <br />
-            Main technologies:
-            <br />
-            <br />
-            <em>python (django)</em>
-            <br />
-            <em>amazon web services (aws)</em>
-            <br />            
-            <em>google cloud platform (gcp)</em>
-            <br />
-            <br />
-            More about me:
-            <br />
-            <br />
-            <a href="{{ site.url }}/full-cv.pdf">CV</a> 
-            <br />
+  <main class="page-content" aria-label="Content">
+    <div>
+      <div>
+        {% for file in site.static_files %} {% if file.path == site.headshot %}
+        {% include headshot.html image=file.path %} {% endif %} {% endfor %}
+      </div>
+      <div class="header">
+        Hello! I am a software developer from the UK, working primarily in web
+        and cloud computing.
+      </div>
+      <div class="cols">
+        <div>
+          <div>
+            My current employer is
+            <a href="https://lambertlabs.com">Lambert Labs.</a>
+          </div>
+          <div>&nbsp;</div>
+          <div>
+            More about me: <a href="{{ site.url }}/full-cv.pdf">CV, </a>
             <a href="mailto:grking8@gmail.com">Email</a>
-    </main>
+          </div>
+        </div>
+        <div>
+          Main technologies:
+          <div>&nbsp;</div>
+          <div><em>python (django)</em></div>
+          <div><em>amazon web services (aws)</em></div>
+          <div><em>google cloud platform (gcp)</em></div>
+        </div>
+      </div>
+    </div>
+  </main>
 </div>
