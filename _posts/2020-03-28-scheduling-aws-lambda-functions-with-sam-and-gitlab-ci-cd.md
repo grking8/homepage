@@ -183,6 +183,7 @@ In your GitLab repository, set the following environment variables:
 
 - `cd /path/to/scheduled-task`
 - `git add .`
+- `git commit -m 'my commit message'`
 - `git push`
 
 You should see the CI/CD pipeline running in GitLab.
