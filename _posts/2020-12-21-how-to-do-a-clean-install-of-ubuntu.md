@@ -3,7 +3,7 @@ layout: post
 title: How to do a clean install of Ubuntu
 author: familyguy
 comments: true
-tags:
+tags: ubuntu
 ---
 
 {% include post-image.html name="cof_orange_hex_400x400.jpg" width="100" height="100"
