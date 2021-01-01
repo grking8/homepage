@@ -144,7 +144,7 @@ The button is clicked seven times, and the correct value of `7` is displayed!
 
 For completeness, below is the equivalent code using class based components.
 
-### Version with bug
+### With bug
 
 ```jsx
 export class App extends React.Component {
@@ -179,7 +179,7 @@ export class App extends React.Component {
 }
 ```
 
-### Version without bug
+### Without bug
 
 ```jsx
 export class App extends React.Component {
