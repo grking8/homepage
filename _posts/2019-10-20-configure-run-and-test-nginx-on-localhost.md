@@ -51,7 +51,7 @@ machine, using Docker means you can easily:
 To run Nginx in a Docker container and serve requests on 
 port 8000 on your machine,
 
-`docker run --interactive -tty --publish 8000:80 nginx bash`
+`docker run --interactive --tty --publish 8000:80 nginx bash`
 
 (if you are on macOS, you might have to start the
 Docker daemon first by clicking on an icon)
