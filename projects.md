@@ -5,78 +5,79 @@ page_title: Projects
 permalink: /projects/
 ---
 
-    
 ## Contributor
 
 - ### [pytube](https://github.com/nficano/pytube)
-    - Handle age restricted and live videos
-    - Extract video metadata
+  - Handle age restricted and live videos
+  - Extract video metadata
 
 ## Owner
 
 - ### static website template
 
-    **Infrastructure as code for continuous deployment of static websites**
+  **Infrastructure as code for continuous deployment of static websites**
 
-    _CircleCI, Docker, GCP Container Registry, GCP Compute Engine, Let's Encrypt_
+  _CircleCI, Docker, GCP Container Registry, GCP Compute Engine, Let's Encrypt_
 
-    [wiki, ](https://github.com/family-guy/test-website/wiki)
-    [source](https://github.com/family-guy/test-website) 
+  [wiki, ](https://github.com/family-guy/test-website/wiki)
+  [source](https://github.com/family-guy/test-website)
 
 - ### personal blog
-    
-    **Personal website and blog using static website template ^^^**
-    
-    _Jekyll, CircleCI, Docker, GCP Container Registry, GCP Compute Engine, Let's Encrypt_
 
-    [wiki, ](https://github.com/family-guy/homepage/wiki)
-    [source, ](https://github.com/family-guy/homepage) 
-    [deployment](https://guyrking.com)
+  **Personal website and blog using static website template ^^^**
+
+  _Jekyll, CircleCI, Docker, GCP Container Registry, GCP Compute Engine, Let's
+  Encrypt_
+
+  [wiki, ](https://github.com/family-guy/homepage/wiki)
+  [source, ](https://github.com/family-guy/homepage)
+  [deployment](https://guyrking.com)
 
 - ### aiostorage
 
-    **Asynchronous library for cloud object storage**
-    
-    _Python, PyPI, pip, conda, CircleCI, Backblaze, Read the Docs_
-    
-    [wiki, ](https://family-guy.github.io/aiostorage-wiki/)
-    [documentation, ](http://aiostorage.readthedocs.io/)
-    [source](https://github.com/family-guy/aiostorage)
+  **Asynchronous library for cloud object storage**
 
-- ### mathdruck 
+  _Python, PyPI, pip, conda, CircleCI, Backblaze, Read the Docs_
 
-    **LaTeX web application**
+  [wiki, ](https://family-guy.github.io/aiostorage-wiki/)
+  [documentation, ](http://aiostorage.readthedocs.io/)
+  [source](https://github.com/family-guy/aiostorage)
 
-    _Angular 4, Karma, PhantomJS, Jasmine, MathJax, Bootstrap_
+- ### mathdruck
 
-    _Laravel, MySQL_
+  **LaTeX web application**
 
-    _AWS EC2_
+  _Angular 4, Karma, PhantomJS, Jasmine, MathJax, Bootstrap_
 
-    [source (frontend)](https://github.com/grking8/mathdruck-ng1)
+  _Laravel, MySQL_
 
-    [source (backend)](https://github.com/grking8/mathdruck-rest)
+  _AWS EC2_
+
+  [source (frontend)](https://github.com/grking8/mathdruck-ng1)
+
+  [source (backend)](https://github.com/grking8/mathdruck-rest)
 
 - ### cms
 
-    **CMS for technical blog posts**
+  **CMS for technical blog posts**
 
-    _PHP, MySQL, Apache, TinyMCE, MathJax, Google Code Prettify_
+  _PHP, MySQL, Apache, TinyMCE, MathJax, Google Code Prettify_
 
-    _AWS EC2_
+  _AWS EC2_
 
-    [source](https://github.com/grking8/web-cms)
+  [source](https://github.com/grking8/web-cms)
 
 - ### linear algebra
 
-    **Linear algebra CLI**
+  **Linear algebra CLI**
 
-    _C++_
+  _C++_
 
-    [source](https://github.com/grking8/linear-algebra)
-<br />
+  [source](https://github.com/grking8/linear-algebra)
 
-***
+  <br />
+
+---
 
 <br />
 
@@ -84,9 +85,7 @@ permalink: /projects/
 
 - ### zorn capital
 
-    **Early-stage quantitative FX hedge fund**
-    
-    _Python, pandas, scipy, MySQL, AWS EC2, GitLab CI/CD, Docker, 
-    GCP Compute Engine, Let's Encrypt, Webpack_ 
-    
-    [company website](https://zorncapital.com)
+  **Early-stage quantitative FX hedge fund**
+
+  _Python, pandas, scipy, MySQL, AWS EC2, GitLab CI/CD, Docker, GCP Compute
+  Engine, Let's Encrypt, Webpack_
