@@ -4,10 +4,8 @@ set -xe
 
 mkdir $STATIC_DIR
 gem install bundler
-gem update bundler
-pwd
-ls
-bundle install
+gbundle check --path vendor/bundle || \
+bundle update html-pipeline && bundle install --path vendor/bundle 
 bundle exec jekyll build
 if [ -d ".well-known/acme-challenge" ]; then
     cp -r ".well-known" $STATIC_DIR
