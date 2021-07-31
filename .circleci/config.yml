@@ -24,7 +24,7 @@ jobs:
 
   build:
     docker:
-      - image: jekyll/jekyll:3.5.0
+      - image: jekyll/jekyll:3.6
     steps:
       - checkout
       - restore_cache:
