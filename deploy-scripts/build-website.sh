@@ -3,6 +3,7 @@
 set -xe
 
 mkdir $STATIC_DIR
+rm Gemfile.lock
 gem install bundler
 bundle config set --local path 'vendor/bundle'
 bundle check || bundle update html-pipeline && bundle install
