@@ -1,6 +1,5 @@
 version: 2
 jobs:
-
   bootstrap:
     docker:
       - image: continuumio/miniconda3:latest
@@ -79,7 +78,9 @@ jobs:
           at: .
       - run:
           name: Create SSL files
-          command: bootstrap/${BOOTSTRAP_REPO}/static-website/ssl/create-ssl-files.sh true
+          command:
+            bootstrap/${BOOTSTRAP_REPO}/static-website/ssl/create-ssl-files.sh
+            true
       - persist_to_workspace:
           root: .
           paths:
@@ -87,19 +88,20 @@ jobs:
             - privkey.pem
 
   containerise:
-      docker:
-        - image: google/cloud-sdk:latest
-      steps:
-        - checkout
-        - setup_remote_docker
-        - attach_workspace:
-            at: .
-        - run:
-            name: Load environment variables
-            command: source bash__profile
-        - run:
-            name: Build Docker image and push to container registry
-            command: bootstrap/${BOOTSTRAP_REPO}/static-website/containerise.sh false
+    docker:
+      - image: google/cloud-sdk:latest
+    steps:
+      - checkout
+      - setup_remote_docker
+      - attach_workspace:
+          at: .
+      - run:
+          name: Load environment variables
+          command: source bash__profile
+      - run:
+          name: Build Docker image and push to container registry
+          command:
+            bootstrap/${BOOTSTRAP_REPO}/static-website/containerise.sh false
 
   deploy-production:
     docker:
