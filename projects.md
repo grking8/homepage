@@ -87,5 +87,7 @@ permalink: /projects/
 
   **Early-stage quantitative FX hedge fund**
 
-  _Python, pandas, scipy, MySQL, AWS EC2, GitLab CI/CD, Docker, GCP Compute
-  Engine, Let's Encrypt, Webpack_
+  _Python, pandas, scipy, MySQL, AWS EC2, GitLab CI/CD, GCP Cloud Storage,
+  Cloudflare, Webpack_
+
+  [company website](https://zorncapital.com)

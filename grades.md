@@ -3,7 +3,7 @@ layout: page
 permalink: /grades/
 ---
 
-## Science
+## University and self-study
 
 | Year | Level | Course Title                                                             |  Grade |  Max |    % |    Rank | ECTS |
 | :--: | :---: | :----------------------------------------------------------------------- | -----: | ---: | ---: | ------: | ---: |
@@ -44,16 +44,16 @@ permalink: /grades/
 
 {:.mbtablestyle}
 
-## Secondary School
+## Secondary school
 
-| Year | Qualification | Course Title          | Grade[^1]  | Max[^2]  |   % |
-| :--: | :-----------: | :-------------------- | --------:  | --:  | --: |
-| 2002 |    A-level    | English Literature    |         A* |   A* |  89 |
-| 2002 |    A-level    | History               |         A  |   A* |  85 |
-| 2002 |    A-level    | Economics             |         A* |   A* |  96 |
-| 2001 |   AS-level    | Government & Politics |         A  |   A  |  93 |
+| Year | Qualification | Course Title          | Grade[^1] | Max[^2] |   % |
+| :--: | :-----------: | :-------------------- | --------: | ------: | --: |
+| 2002 |    A-level    | English Literature    |       A\* |     A\* |  89 |
+| 2002 |    A-level    | History               |         A |     A\* |  85 |
+| 2002 |    A-level    | Economics             |       A\* |     A\* |  96 |
+| 2001 |   AS-level    | Government & Politics |         A |       A |  93 |
 
-[^1]: A\* post-2009
-[^2]: A\* post-2009
+[^1]: A\* post 2009
+[^2]: A\* post 2009
 
 <a href="#top">Back to top</a>
