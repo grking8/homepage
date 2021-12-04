@@ -1,169 +1,34 @@
-version: 2
+version: 2.1
+setup: true
+orbs:
+  continuation: circleci/continuation@0.2.0
 jobs:
-  bootstrap:
-    docker:
-      - image: continuumio/miniconda3:latest
+  setup:
+    executor: continuation/default
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - $EXTERNAL_GITHOST_SSH_FINGERPRINT
       - run:
-          name: Download external build scripts and build conda environment
-          command: deploy-scripts/bootstrap.sh
-      - run:
-          name: Create bash profile
+          name: Create pipeline parameters
           command: |
-            python bootstrap/${BOOTSTRAP_REPO}/bash_profile.py
-            cp $BASH_ENV bash__profile
-      - persist_to_workspace:
-          root: .
-          paths:
-            - bash__profile
-            - bootstrap/deploy-scripts
-
-  build:
-    docker:
-      - image: jekyll/jekyll:3.5.0
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - gem-{{ checksum "Gemfile.lock" }}
-            - gem
-      - attach_workspace:
-          at: .
-      - run:
-          name: Build source files into HTML, CSS, and JS
-          command: |
-            source bash__profile
-            deploy-scripts/build-website.sh
-          environment:
-            JEKYLL_ENV: production
-      - save_cache:
-          key: gem-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
-      - persist_to_workspace:
-          root: .
-          paths:
-            - _site
-
-  renew-ssl:
-    docker:
-      - image: alpine:latest
-    steps:
-      - checkout
-      - run:
-          name: Install latest ca-certificates
-          command: apk add ca-certificates
-      - attach_workspace:
-          at: .
-      - run:
-          name: Get SSL files from certbot to update environment variables
-          no_output_timeout: 40m
-          command: |
-            source bash__profile
-            bootstrap/${BOOTSTRAP_REPO}/static-website/ssl/renew-ssl.sh
-
-  create-ssl:
-    docker:
-      - image: alpine:latest
-    steps:
-      - checkout
-      - run:
-          name: Install latest ca-certificates
-          command: apk add ca-certificates
-      - attach_workspace:
-          at: .
-      - run:
-          name: Create SSL files
-          command:
-            bootstrap/${BOOTSTRAP_REPO}/static-website/ssl/create-ssl-files.sh
-            true
-      - persist_to_workspace:
-          root: .
-          paths:
-            - fullchain.pem
-            - privkey.pem
-
-  containerise:
-    docker:
-      - image: google/cloud-sdk:latest
-    steps:
-      - checkout
-      - setup_remote_docker
-      - attach_workspace:
-          at: .
-      - run:
-          name: Load environment variables
-          command: source bash__profile
-      - run:
-          name: Build Docker image and push to container registry
-          command:
-            bootstrap/${BOOTSTRAP_REPO}/static-website/containerise.sh false
-
-  deploy-production:
-    docker:
-      - image: google/cloud-sdk:latest
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Load environment variables
-          command: source bash__profile
-      - run:
-          name: Create or update GCP instance and run Docker image
-          command: bootstrap/${BOOTSTRAP_REPO}/static-website/gcp/authenticate-create-update-instance.sh
-
+            export GCP_PROJECT_ID="testing-203707"
+            export GCP_IDENTITY_SERVICE_ACCOUNT="${CIRCLE_PROJECT_REPONAME}-ci-identity"
+            export GCP_IDENTITY_SERVICE_ACCOUNT_EMAIL="${GCP_IDENTITY_SERVICE_ACCOUNT}@${GCP_PROJECT_ID}.iam.gserviceaccount.com"
+            export GCP_IDENTITY_SERVICE_ACCOUNT_KEY_PATH="/tmp/key.json"
+            export GCP_RESOURCE_SERVICE_ACCOUNT="${CIRCLE_PROJECT_REPONAME}-ci-resource"
+            export GCP_RESOURCE_SERVICE_ACCOUNT_EMAIL="${GCP_RESOURCE_SERVICE_ACCOUNT}@${GCP_PROJECT_ID}.iam.gserviceaccount.com"
+            export GCP_REGION="US-WEST1"
+            export GCLOUD_SDK_VERSION="358.0.0"
+            export STATIC_DIR="_site"
+            export DOMAIN="guyrking.com"
+            export SUBDOMAIN="www.${DOMAIN}"
+            export MAIN_PAGE="index.html"
+            export NOT_FOUND_PAGE="404.html"
+            export INITIAL_RUN="false"
+            .circleci/parameters.sh "parameters.json"
+      - continuation/continue:
+          configuration_path: ".circleci/main.yml"
+          parameters: "parameters.json"
 workflows:
-  version: 2
-  build-ssl-containerise-deploy:
+  setup:
     jobs:
-      - bootstrap
-      - build:
-          requires:
-            - bootstrap
-      - create-ssl:
-          requires:
-            - build
-      - containerise:
-          requires:
-            - create-ssl
-          filters:
-            branches:
-              only:
-                - master
-      - deploy-production:
-          requires:
-            - containerise
-          filters:
-            branches:
-              only:
-                - master
-  build-renew-ssl-containerise-deploy:
-    triggers:
-      - schedule:
-          cron: "10 03 26 * *"
-          filters:
-            branches:
-              only:
-                - master
-    jobs:
-      - bootstrap
-      - build:
-          requires:
-            - bootstrap
-      - renew-ssl:
-          requires:
-            - build
-      - create-ssl:
-          requires:
-            - renew-ssl
-      - containerise:
-          requires:
-            - create-ssl
-      - deploy-production:
-          requires:
-            - containerise
+      - setup
