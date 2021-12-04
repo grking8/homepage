@@ -15,7 +15,7 @@ jobs:
             export GCP_IDENTITY_SERVICE_ACCOUNT_EMAIL="${GCP_IDENTITY_SERVICE_ACCOUNT}@${GCP_PROJECT_ID}.iam.gserviceaccount.com"
             export GCP_IDENTITY_SERVICE_ACCOUNT_KEY_PATH="/tmp/key.json"
             export GCP_RESOURCE_SERVICE_ACCOUNT="${CIRCLE_PROJECT_REPONAME}-ci-resource"
-            export GCP_RESOURCE_SERVICE_ACCOUNT_EMAIL="temp-697@testing-203707.iam.gserviceaccount.com"
+            export GCP_RESOURCE_SERVICE_ACCOUNT_EMAIL="${GCP_RESOURCE_SERVICE_ACCOUNT}@${GCP_PROJECT_ID}.iam.gserviceaccount.com"
             export GCP_REGION="US-WEST1"
             export GCLOUD_SDK_VERSION="358.0.0"
             export STATIC_DIR="_site"
@@ -23,7 +23,7 @@ jobs:
             export SUBDOMAIN="www.${DOMAIN}"
             export MAIN_PAGE="index.html"
             export NOT_FOUND_PAGE="404.html"
-            export INITIAL_RUN="true"
+            export INITIAL_RUN="false"
             .circleci/parameters.sh "parameters.json"
       - continuation/continue:
           configuration_path: ".circleci/main.yml"
