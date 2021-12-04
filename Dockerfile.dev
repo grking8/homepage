@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 
 ARG PROJECT_DIR="/homepage"
-ARG GEM_DIR="/gem"
+ENV GEM_DIR="/gem"
 
 RUN apt clean && rm -rf /var/lib/apt/lists/*
 RUN apt-get update
@@ -14,7 +14,7 @@ RUN gem update --system
 COPY Gemfile $GEM_DIR/
 COPY minima.gemspec $GEM_DIR/
 WORKDIR $GEM_DIR
-RUN bundle config set path "${GEM_DIR}/vendor"
+RUN bundle config set --local path "${GEM_DIR}/vendor"
 RUN bundle install
 
 RUN mkdir $PROJECT_DIR
@@ -23,4 +23,4 @@ ADD . $PROJECT_DIR
 
 EXPOSE 35729
 EXPOSE 4000
-CMD ["sh", "-c", "cp /gem/Gemfile.lock /homepage/ && bundle update && bundle exec jekyll serve --force_polling --livereload --host 0.0.0.0"]
+CMD ["sh", "-c", "cp ${GEM_DIR}/Gemfile.lock /homepage/ && bundle exec jekyll serve --force_polling --livereload --host 0.0.0.0"]
