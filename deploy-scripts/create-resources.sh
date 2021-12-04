@@ -17,4 +17,4 @@ gcloud deployment-manager deployments create \
 GCP_REGION:${GCP_REGION},\
 MAIN_PAGE:${MAIN_PAGE},\
 NOT_FOUND_PAGE:${NOT_FOUND_PAGE}"
-gsutil -m cp -R "${STATIC_DIR}"/* "gs://${SUBDOMAIN}"
+gsutil -m cp -R "${STATIC_DIR}/*" "gs://${SUBDOMAIN}"
