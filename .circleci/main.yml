@@ -131,4 +131,3 @@ workflows:
             branches:
               only:
                 - master
-                - deploy-to-google-cloud-storage
