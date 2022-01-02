@@ -17,17 +17,17 @@ permalink: /projects/
 
   **Infrastructure as code for continuous deployment of static websites**
 
-  _CircleCI, Docker, GCP Container Registry, GCP Compute Engine, Let's Encrypt_
+  _CircleCI, Cloudflare, GCP (Cloud Storage, Deployment Manager, IAM)_
 
   [wiki, ](https://github.com/family-guy/test-website/wiki)
   [source](https://github.com/family-guy/test-website)
 
 - ### personal blog
 
-  **Personal website and blog using static website template ^^^**
+  **Personal website and blog using static website template ^**
 
-  _Jekyll, CircleCI, Docker, GCP Container Registry, GCP Compute Engine, Let's
-  Encrypt_
+  _Jekyll, CircleCI, Docker, Cloudflare, GCP (Cloud Storage, Deployment Manager,
+  IAM)_
 
   [wiki, ](https://github.com/family-guy/homepage/wiki)
   [source, ](https://github.com/family-guy/homepage)
@@ -87,5 +87,7 @@ permalink: /projects/
 
   **Early-stage quantitative FX hedge fund**
 
-  _Python, pandas, scipy, MySQL, AWS EC2, GitLab CI/CD, Docker, GCP Compute
-  Engine, Let's Encrypt, Webpack_
+  _Python, pandas, scipy, MySQL, AWS (EC2, IAM, CodeCommit), GitLab CI/CD, GCP
+  (Cloud Storage, Deployment Manager, IAM), Cloudflare, Webpack_
+
+  [company website](https://zorncapital.com)

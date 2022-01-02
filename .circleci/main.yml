@@ -1,0 +1,133 @@
+version: 2.1
+parameters:
+  gcp-project-id:
+    type: string
+    default: ""
+  gcp-identity-service-account:
+    type: string
+    default: ""
+  gcp-identity-service-account-email:
+    type: string
+    default: ""
+  gcp-identity-service-account-key-path:
+    type: string
+    default: ""
+  gcp-resource-service-account:
+    type: string
+    default: ""
+  gcp-resource-service-account-email:
+    type: string
+    default: ""
+  gcp-region:
+    type: string
+    default: ""
+  gcloud-sdk-version:
+    type: string
+    default: ""
+  static-dir:
+    type: string
+    default: ""
+  domain:
+    type: string
+    default: ""
+  subdomain:
+    type: string
+    default: ""
+  main-page:
+    type: string
+    default: ""
+  not-found-page:
+    type: string
+    default: ""
+  initial-run:
+    type: string
+    default: "false"
+jobs:
+  build-static-files:
+    docker:
+      - image: jekyll/jekyll:3.5.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - gem-{{ checksum "Gemfile.lock" }}
+            - gem
+      - run:
+          name: Create static files
+          command: |
+            export STATIC_DIR="<< pipeline.parameters.static-dir >>"
+            deploy-scripts/build-website.sh
+          environment:
+            JEKYLL_ENV: production
+      - save_cache:
+          key: gem-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.static-dir >>
+  create-resources:
+    docker:
+      - image: google/cloud-sdk:<< pipeline.parameters.gcloud-sdk-version >>
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Authenticate gcloud and create resources
+          command: |
+            export GCP_PROJECT_ID="<< pipeline.parameters.gcp-project-id >>"
+            export GCP_IDENTITY_SERVICE_ACCOUNT_KEY_PATH="<< pipeline.parameters.gcp-identity-service-account-key-path >>"
+            export GCP_IDENTITY_SERVICE_ACCOUNT_EMAIL="<< pipeline.parameters.gcp-identity-service-account-email >>"
+            export GCP_RESOURCE_SERVICE_ACCOUNT_EMAIL="<< pipeline.parameters.gcp-resource-service-account-email >>"
+            export GCP_RESOURCE_SERVICE_ACCOUNT="<< pipeline.parameters.gcp-resource-service-account >>"
+            export GCP_REGION="<< pipeline.parameters.gcp-region >>"
+            export SUBDOMAIN="<< pipeline.parameters.subdomain >>"
+            export MAIN_PAGE="<< pipeline.parameters.main-page >>"
+            export NOT_FOUND_PAGE="<< pipeline.parameters.not-found-page >>"
+            export STATIC_DIR="<< pipeline.parameters.static-dir >>"
+            deploy-scripts/authenticate.sh
+            deploy-scripts/create-resources.sh
+  deploy-prod:
+    docker:
+      - image: google/cloud-sdk:<< pipeline.parameters.gcloud-sdk-version >>
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Authenticate gcloud and upload static files to GCP Cloud Storage
+          command: |
+            export GCP_PROJECT_ID="<< pipeline.parameters.gcp-project-id >>"
+            export GCP_IDENTITY_SERVICE_ACCOUNT_KEY_PATH="<< pipeline.parameters.gcp-identity-service-account-key-path >>"
+            export GCP_IDENTITY_SERVICE_ACCOUNT_EMAIL="<< pipeline.parameters.gcp-identity-service-account-email >>"
+            export GCP_RESOURCE_SERVICE_ACCOUNT_EMAIL="<< pipeline.parameters.gcp-resource-service-account-email >>"
+            export SUBDOMAIN="<< pipeline.parameters.subdomain >>"
+            deploy-scripts/authenticate.sh
+            gsutil -m cp -R << pipeline.parameters.static-dir >>/* gs://${SUBDOMAIN}
+workflows:
+  build-create:
+    when:
+      equal: ["true", << pipeline.parameters.initial-run >>]
+    jobs:
+      - build-static-files
+      - hold-create-resources:
+          type: approval
+          requires:
+            - build-static-files
+      - create-resources:
+          requires:
+            - hold-create-resources
+  build-deploy:
+    when:
+      equal: ["false", << pipeline.parameters.initial-run >>]
+    jobs:
+      - build-static-files
+      - deploy-prod:
+          requires:
+            - build-static-files
+          filters:
+            branches:
+              only:
+                - master
