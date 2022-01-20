@@ -6,21 +6,18 @@ logo: favicon.ico
 social: 
   name: Guy King
   links:
-    - https://www.facebook.com/dairy.myriad
     - https://uk.linkedin.com/in/guy-king-76454b190
     - https://github.com/grking8
 google_site_verification: 3ySRxBWLKexu3HT_1LRgu3i7dzrG2Y2-47XaBlOImF0
 lang: en_UK
 seo:
   links:
-    - https://www.facebook.com/dairy.myriad
     - https://uk.linkedin.com/in/guy-king-76454b190
     - https://github.com/grking8
 description: > # this means to ignore newlines until "github_username:"
   Personal website and blog
 
 github_username:  grking8
-facebook_username: dairy.myriad
 headshot: /assets/images/headshot.jpeg
 
 # Minima date format
@@ -33,7 +30,6 @@ minima:
     # twitter: jekyllrb
     rss: rss
     # dribbble: jekyll
-    facebook: dairy.myriad
     github:  grking8
 
     # flickr:   jekyll
