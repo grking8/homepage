@@ -55,6 +55,8 @@ jobs:
       - run:
           name: Create static files
           command: |
+            echo debug
+            ls -alht
             export STATIC_DIR="<< pipeline.parameters.static-dir >>"
             deploy-scripts/build-website.sh
           environment:

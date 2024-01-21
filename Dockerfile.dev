@@ -8,7 +8,6 @@ RUN apt-get update
 RUN apt-get upgrade --yes --fix-missing
 RUN apt-get install --yes --fix-missing ruby-full build-essential zlib1g-dev git
 RUN gem install jekyll 
-RUN gem install bundler -v 2.1.4
 RUN gem install rubygems-update
 RUN update_rubygems
 RUN gem install bundler
