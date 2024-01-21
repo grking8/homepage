@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:18.04
 
 ARG PROJECT_DIR="/homepage"
 ENV GEM_DIR="/gem"
@@ -6,10 +6,11 @@ ENV GEM_DIR="/gem"
 RUN apt clean && rm -rf /var/lib/apt/lists/*
 RUN apt-get update
 RUN apt-get upgrade --yes --fix-missing
-RUN apt-get install --yes --fix-missing ruby-full build-essential zlib1g-dev git
-RUN gem install jekyll 
+RUN apt-get install --yes --fix-missing ruby-full=1:2.5.1 build-essential zlib1g-dev git
+RUN gem install public_suffix -v 4.0.7
+RUN gem install jekyll -v 3.5.0
 RUN gem install bundler -v 2.1.4
-RUN gem update --system
+
 
 COPY Gemfile $GEM_DIR/
 COPY minima.gemspec $GEM_DIR/
@@ -23,4 +24,4 @@ ADD . $PROJECT_DIR
 
 EXPOSE 35729
 EXPOSE 4000
-CMD ["sh", "-c", "cp ${GEM_DIR}/Gemfile.lock /homepage/ && bundle exec jekyll serve --force_polling --livereload --host 0.0.0.0"]
+CMD ["sh", "-c", "git config --global --add safe.directory /homepage && cp ${GEM_DIR}/Gemfile.lock /homepage/ && bundle exec jekyll serve --force_polling --livereload --host 0.0.0.0"]
