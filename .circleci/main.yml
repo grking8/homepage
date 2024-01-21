@@ -50,8 +50,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - gem-{{ checksum "Gemfile.lock" }}
-            - gem
+            - gem-v2-{{ checksum "Gemfile.lock" }}
       - run:
           name: Create static files
           command: |
@@ -60,7 +59,7 @@ jobs:
           environment:
             JEKYLL_ENV: production
       - save_cache:
-          key: gem-{{ checksum "Gemfile.lock" }}
+          key: gem-v2-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
       - persist_to_workspace:
