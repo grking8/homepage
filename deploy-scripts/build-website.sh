@@ -8,5 +8,4 @@ echo list of files
 pwd
 ls -lht
 cat Gemfile
-bundle install
-bundle exec jekyll build
+jekyll build
