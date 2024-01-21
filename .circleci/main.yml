@@ -48,10 +48,10 @@ jobs:
       - image: jekyll/jekyll:4.0
     steps:
       - checkout
-      # - restore_cache:
-      #     keys:
-      #       - gem-{{ checksum "Gemfile.lock" }}
-      #       - gem
+      - restore_cache:
+          keys:
+            - gem-{{ checksum "Gemfile.lock" }}
+            - gem
       - run:
           name: Create static files
           command: |
