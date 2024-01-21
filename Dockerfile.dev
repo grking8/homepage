@@ -6,7 +6,7 @@ ENV GEM_DIR="/gem"
 RUN apt clean && rm -rf /var/lib/apt/lists/*
 RUN apt-get update
 RUN apt-get upgrade --yes --fix-missing
-RUN apt-get install --yes --fix-missing ruby-full build-essential zlib1g-dev git
+RUN apt-get install --yes --fix-missing ruby-full=1:2.5.1 build-essential zlib1g-dev git
 RUN gem install public_suffix -v 4.0.7
 RUN gem install jekyll -v 3.5.0
 RUN gem install bundler -v 2.1.4

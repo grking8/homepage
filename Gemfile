@@ -8,3 +8,4 @@ gem 'jekyll-feed'
 gem 'jekyll-seo-tag'
 gem "kramdown-parser-gfm"
 gem 'ffi', '1.15.4'
+gem 'rexml', '3.2.5'
