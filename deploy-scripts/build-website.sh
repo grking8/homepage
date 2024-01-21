@@ -6,5 +6,6 @@ mkdir $STATIC_DIR
 # bundle config set --local path "$(pwd)/bundle"
 echo list of files
 pwd
+ls -lht
 bundle install
 bundle exec jekyll build
