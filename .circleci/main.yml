@@ -45,7 +45,7 @@ parameters:
 jobs:
   build-static-files:
     docker:
-      - image: jekyll/jekyll:3.7.3
+      - image: jekyll/jekyll:3.5.0
     steps:
       - checkout
       - restore_cache:
