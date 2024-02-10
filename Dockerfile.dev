@@ -24,4 +24,4 @@ ADD . $PROJECT_DIR
 
 EXPOSE 35729
 EXPOSE 4000
-CMD ["sh", "-c", "git config --global --add safe.directory /homepage && cp ${GEM_DIR}/Gemfile.lock /homepage/ && bundle exec jekyll serve --force_polling --livereload --host 0.0.0.0"]
+CMD ["sh", "-c", "git config --global --add safe.directory /homepage && cp ${GEM_DIR}/Gemfile.lock /homepage/ && bundle add webrick && bundle exec jekyll serve --force_polling --livereload --host 0.0.0.0"]
