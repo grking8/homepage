@@ -88,7 +88,7 @@ permalink: /projects/
   **Build to rent (BTR) property search portal**
 
   _Python, FastAPI, Troposphere, Sceptre, pytest, Docker, AWS (DynamoDB, API Gateway, Lambda, 
-  S3, CloudFront, SAM),  GitLab CI/CD, GCP (Google Maps), React, antd, Webpack_
+  S3, CloudFront, SAM),  GitLab CI/CD, GCP (Google Maps, Cloud Storage), React, antd, Webpack_
 
 - ### zorn capital
 
