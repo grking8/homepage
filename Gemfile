@@ -8,5 +8,5 @@ gem 'jekyll-feed', '0.15.1'
 gem 'jekyll-seo-tag', '2.7.1'
 gem "kramdown-parser-gfm"
 gem 'ffi', '1.15.4'
-gem 'rexml', '3.2.5'
+gem 'rexml', '3.3.3'
 gem "webrick"
